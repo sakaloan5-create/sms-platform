@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMS Platform - Merchant Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@7.2.96/css/materialdesignicons.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #1976d2;
+            --primary-dark: #1565c0;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --error: #f44336;
+            --bg: #f8fafc;
+            --sidebar: #fff;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: #333;
+        }
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+        /* Language Selector */
+        .lang-selector {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 1000;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 4px;
+            display: flex;
+            gap: 4px;
+        }
+        .lang-btn {
+            padding: 6px 12px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.2s;
+        }
+        .lang-btn:hover {
+            background: #f0f0f0;
+        }
+        .lang-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--sidebar);
+            border-right: 1px solid #e2e8f0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .sidebar-header {
+            padding: 24px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+        .brand-text h1 {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        .brand-text p {
+            font-size: 12px;
+            color: #64748b;
+        }
+        .balance-card {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 16px;
+            border-radius: 12px;
+        }
+        .balance-label {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-bottom: 4px;
+        }
+        .balance-value {
+            font-size: 24px;
+            font-weight: 700;
+        }
+        .balance-currency {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .balance-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .balance-btn {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .balance-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        .nav-menu {
+            padding: 16px 0;
+        }
+        .nav-section {
+            padding: 8px 24px;
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #94a3b8;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 24px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: #475569;
+            border-left: 3px solid transparent;
+        }
+        .nav-item:hover {
+            background: #f1f5f9;
+            color: var(--primary);
+        }
+        .nav-item.active {
+            background: #eff6ff;
+            color: var(--primary);
+            border-left-color: var(--primary);
+        }
+        .nav-item i {
+            font-size: 20px;
+            margin-right: 12px;
+            width: 24px;
+            text-align: center;
+        }
+        /* Main */
+        .main {
+            flex: 1;
+            margin-left: 280px;
+            padding: 80px 24px 24px;
+        }
+        /* Header */
+        .page-header {
+            margin-bottom: 24px;
+        }
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+        .page-subtitle {
+            color: #64748b;
+        }
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 24px;
+        }
+        .card-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+        .card-body {
+            padding: 24px;
+        }
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .action-card {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+        .action-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+        .action-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+        .action-card.send .action-icon {
+            background: #eff6ff;
+            color: var(--primary);
+        }
+        .action-card.history .action-icon {
+            background: #f0fdf4;
+            color: var(--success);
+        }
+        .action-card.api .action-icon {
+            background: #fef3c7;
+            color: #f59e0b;
+        }
+        .action-card.subaccount .action-icon {
+            background: #f3e8ff;
+            color: #9333ea;
+        }
+        .action-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .action-desc {
+            font-size: 14px;
+            color: #64748b;
+        }
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .stat-card .label {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+        .stat-card .value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        .stat-card .change {
+            font-size: 12px;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .stat-card .change.positive {
+            color: var(--success);
+        }
+        /* Table */
+        .table-container {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        th {
+            font-weight: 600;
+            color: #64748b;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        tr:hover {
+            background: #f8fafc;
+        }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .status-badge.sent {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+        .status-badge.delivered {
+            background: #d1fae5;
+            color: #059669;
+        }
+        .status-badge.failed {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+        .btn-secondary {
+            background: white;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+        }
+        .btn-secondary:hover {
+            background: #f8fafc;
+        }
+    </style>
+</head>
+<body>
+    <!-- Language Selector -->
+    <div class="lang-selector">
+        <button class="lang-btn active" data-lang="pt" onclick="setLanguage('pt')">🇧🇷 Português</button>
+        <button class="lang-btn" data-lang="en" onclick="setLanguage('en')">🇺🇸 English</button>
+        <button class="lang-btn" data-lang="es" onclick="setLanguage('es')">🇪🇸 Español</button>
+        <button class="lang-btn" data-lang="zh" onclick="setLanguage('zh')">🇨🇳 中文</button>
+    </div>
+
+    <div class="layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="brand">
+                    <div class="logo">📱</div>
+                    <div class="brand-text">
+                        <h1>SMS Platform</h1>
+                        <p>Merchant Portal</p>
+                    </div>
+                </div>
+                
+                <div class="balance-card">
+                    <div class="balance-label" data-i18n="balance.title">Saldo Disponível</div>
+                    <div>
+                        <span class="balance-value">$12,450.00</span>
+                        <span class="balance-currency">USD</span>
+                    </div>
+                    <div class="balance-actions">
+                        <button class="balance-btn" data-i18n="balance.recharge">Recarregar</button>
+                        <button class="balance-btn" data-i18n="balance.history">Histórico</button>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <div class="nav-section" data-i18n="nav.main">Principal</div>
+                <a href="#" class="nav-item active">
+                    <i class="mdi mdi-view-dashboard"></i>
+                    <span data-i18n="nav.dashboard">Dashboard</span>
+                </a>
+                
+                <div class="nav-section" data-i18n="nav.messages">Mensagens</div>
+                <a href="#" class="nav-item">
+                    <i class="mdi mdi-send"></i>
+                    <span data-i18n="nav.send">Enviar SMS</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="mdi mdi-history"></i>
+                    <span data-i18n="nav.history">Histórico</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="mdi mdi-file-chart"></i>
+                    <span data-i18n="nav.reports">Relatórios</span>
+                </a>
+                
+                <div class="nav-section" data-i18n="nav.settings">Configurações</div>
+                <a href="#" class="nav-item">
+                    <i class="mdi mdi-key"></i>
+                    <span data-i18n="nav.api">API Keys</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="mdi mdi-account-group"></i>
+                    <span data-i18n="nav.subaccounts">Sub-contas</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="mdi mdi-cog"></i>
+                    <span data-i18n="nav.profile">Perfil</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+            <div class="page-header">
+                <h1 class="page-title" data-i18n="dashboard.title">Dashboard</h1>
+                <p class="page-subtitle" data-i18n="dashboard.welcome">Bem-vindo de volta! Aqui está o resumo da sua conta.</p>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <div class="action-card send">
+                    <div class="action-icon">📤</div>
+                    <div class="action-title" data-i18n="actions.send">Enviar SMS</div>
+                    <div class="action-desc" data-i18n="actions.sendDesc">Envie mensagens individuais ou em massa</div>
+                </div>
+                
+                <div class="action-card history">
+                    <div class="action-icon">📊</div>
+                    <div class="action-title" data-i18n="actions.history">Histórico</div>
+                    <div class="action-desc" data-i18n="actions.historyDesc">Visualize relatórios detalhados</div>
+                </div>
+                
+                <div class="action-card api">
+                    <div class="action-icon">🔑</div>
+                    <div class="action-title" data-i18n="actions.api">API Keys</div>
+                    <div class="action-desc" data-i18n="actions.apiDesc">Gerencie suas chaves de API</div>
+                </div>
+                
+                <div class="action-card subaccount">
+                    <div class="action-icon">👥</div>
+                    <div class="action-title" data-i18n="actions.subaccount">Sub-contas</div>
+                    <div class="action-desc" data-i18n="actions.subaccountDesc">Gerencie membros da equipe</div>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="label" data-i18n="stats.today">Envios Hoje</div>
+                    <div class="value">12,847</div>
+                    <div class="change positive">
+                        <i class="mdi mdi-arrow-up"></i>
+                        <span>23% vs ontem</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="label" data-i18n="stats.delivered">Taxa de Entrega</div>
+                    <div class="value" style="color: var(--success);">98.7%</div>
+                    <div class="change positive">
+                        <i class="mdi mdi-check-circle"></i>
+                        <span>Excelente</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="label" data-i18n="stats.spent">Gasto Hoje</div>
+                    <div class="value">$642.35</div>
+                    <div class="change" style="color: #64748b;">
+                        <span>$0.05 / SMS médio</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="label" data-i18n="stats.remaining">Saldo Restante</div>
+                    <div class="value">~249K</div>
+                    <div class="change" style="color: #64748b;">
+                        <span>SMS estimados</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Messages -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title" data-i18n="recent.title">Envios Recentes</div>
+                    <button class="btn btn-secondary" data-i18n="recent.viewAll">Ver Todos</button>
+                </div>
+                
+                <div class="card-body">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th data-i18n="table.id">ID</th>
+                                    <th data-i18n="table.phone">Telefone</th>
+                                    <th data-i18n="table.message">Mensagem</th>
+                                    <th data-i18n="table.country">País</th>
+                                    <th data-i18n="table.cost">Custo</th>
+                                    <th data-i18n="table.status">Status</th>
+                                    <th data-i18n="table.time">Hora</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#MSG2847</td>
+                                    <td>+55 11 99999-9999</td>
+                                    <td>Seu código de verificação é: 123456</td>
+                                    <td>🇧🇷 Brasil</td>
+                                    <td>$0.05</td>
+                                    <td><span class="status-badge delivered">Entregue</span></td>
+                                    <td>14:32:05</td>
+                                </tr>
+                                <tr>
+                                    <td>#MSG2846</td>
+                                    <td>+1 555 123-4567</td>
+                                    <td>Your order #12345 has been shipped!</td>
+                                    <td>🇺🇸 EUA</td>
+                                    <td>$0.08</td>
+                                    <td><span class="status-badge delivered">Entregue</span></td>
+                                    <td>14:28:33</td>
+                                </tr>
+                                <tr>
+                                    <td>#MSG2845</td>
+                                    <td>+52 55 1234-5678</td>
+                                    <td>¡Hola! Tu código de descuento es DESC20</td>
+                                    <td>🇲🇽 México</td>
+                                    <td>$0.06</td>
+                                    <td><span class="status-badge sent">Enviado</span></td>
+                                    <td>14:25:18</td>
+                                </tr>
+                                <tr>
+                                    <td>#MSG2844</td>
+                                    <td>+54 9 11 1234-5678</td>
+                                    <td>Tu pedido está listo para retirar</td>
+                                    <td>🇦🇷 Argentina</td>
+                                    <td>$0.07</td>
+                                    <td><span class="status-badge failed">Falhou</span></td>
+                                    <td>14:20:42</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const translations = {
+            pt: {
+                balance: { title: 'Saldo Disponível', recharge: 'Recarregar', history: 'Histórico' },
+                nav: { main: 'Principal', messages: 'Mensagens', settings: 'Configurações', dashboard: 'Dashboard', send: 'Enviar SMS', history: 'Histórico', reports: 'Relatórios', api: 'API Keys', subaccounts: 'Sub-contas', profile: 'Perfil' },
+                dashboard: { title: 'Dashboard', welcome: 'Bem-vindo de volta! Aqui está o resumo da sua conta.' },
+                actions: { send: 'Enviar SMS', sendDesc: 'Envie mensagens individuais ou em massa', history: 'Histórico', historyDesc: 'Visualize relatórios detalhados', api: 'API Keys', apiDesc: 'Gerencie suas chaves de API', subaccount: 'Sub-contas', subaccountDesc: 'Gerencie membros da equipe' },
+                stats: { today: 'Envios Hoje', delivered: 'Taxa de Entrega', spent: 'Gasto Hoje', remaining: 'Saldo Restante' },
+                recent: { title: 'Envios Recentes', viewAll: 'Ver Todos' },
+                table: { id: 'ID', phone: 'Telefone', message: 'Mensagem', country: 'País', cost: 'Custo', status: 'Status', time: 'Hora' }
+            },
+            en: {
+                balance: { title: 'Available Balance', recharge: 'Recharge', history: 'History' },
+                nav: { main: 'Main', messages: 'Messages', settings: 'Settings', dashboard: 'Dashboard', send: 'Send SMS', history: 'History', reports: 'Reports', api: 'API Keys', subaccounts: 'Sub-accounts', profile: 'Profile' },
+                dashboard: { title: 'Dashboard', welcome: 'Welcome back! Here is your account summary.' },
+                actions: { send: 'Send SMS', sendDesc: 'Send individual or bulk messages', history: 'History', historyDesc: 'View detailed reports', api: 'API Keys', apiDesc: 'Manage your API keys', subaccount: 'Sub-accounts', subaccountDesc: 'Manage team members' },
+                stats: { today: "Today's Sends", delivered: 'Delivery Rate', spent: "Today's Spent", remaining: 'Remaining Balance' },
+                recent: { title: 'Recent Messages', viewAll: 'View All' },
+                table: { id: 'ID', phone: 'Phone', message: 'Message', country: 'Country', cost: 'Cost', status: 'Status', time: 'Time' }
+            },
+            es: {
+                balance: { title: 'Saldo Disponible', recharge: 'Recargar', history: 'Historial' },
+                nav: { main: 'Principal', messages: 'Mensajes', settings: 'Configuración', dashboard: 'Panel', send: 'Enviar SMS', history: 'Historial', reports: 'Reportes', api: 'API Keys', subaccounts: 'Sub-cuentas', profile: 'Perfil' },
+                dashboard: { title: 'Panel', welcome: '¡Bienvenido de vuelta! Aquí está el resumen de su cuenta.' },
+                actions: { send: 'Enviar SMS', sendDesc: 'Envíe mensajes individuales o masivos', history: 'Historial', historyDesc: 'Vea informes detallados', api: 'API Keys', apiDesc: 'Gestione sus claves API', subaccount: 'Sub-cuentas', subaccountDesc: 'Gestione miembros del equipo' },
+                stats: { today: 'Envíos Hoy', delivered: 'Tasa de Entrega', spent: 'Gasto Hoy', remaining: 'Saldo Restante' },
+                recent: { title: 'Envíos Recientes', viewAll: 'Ver Todos' },
+                table: { id: 'ID', phone: 'Teléfono', message: 'Mensaje', country: 'País', cost: 'Costo', status: 'Estado', time: 'Hora' }
+            },
+            zh: {
+                balance: { title: '可用余额', recharge: '充值', history: '记录' },
+                nav: { main: '主要', messages: '消息', settings: '设置', dashboard: '控制台', send: '发送短信', history: '历史记录', reports: '报表', api: 'API密钥', subaccounts: '子账号', profile: '个人资料' },
+                dashboard: { title: '控制台', welcome: '欢迎回来！这是您的账户概览。' },
+                actions: { send: '发送短信', sendDesc: '发送单条或批量消息', history: '历史', historyDesc: '查看详细报告', api: 'API密钥', apiDesc: '管理您的API密钥', subaccount: '子账号', subaccountDesc: '管理团队成员' },
+                stats: { today: '今日发送', delivered: '送达率', spent: '今日花费', remaining: '剩余余额' },
+                recent: { title: '最近发送', viewAll: '查看全部' },
+                table: { id: 'ID', phone: '手机号', message: '消息内容', country: '国家', cost: '费用', status: '状态', time: '时间' }
+            }
+        };
+
+        function setLanguage(lang) {
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
+            
+            const t = translations[lang];
+            
+            // Update all translatable elements
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const keys = el.dataset.i18n.split('.');
+                let value = t;
+                for (const key of keys) {
+                    value = value?.[key];
+                }
+                if (value) el.textContent = value;
+            });
+            
+            document.documentElement.lang = lang === 'zh' ? 'zh-CN' : lang === 'pt' ? 'pt-BR' : lang === 'es' ? 'es-ES' : 'en';
+        }
+
+        // Auto-detect language from IP (simulated)
+        function detectLanguage() {
+            // In real implementation, this would use IP geolocation
+            // For now, default to Portuguese
+            return 'pt';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const lang = detectLanguage();
+            setLanguage(lang);
+        });
+    </script>
+</body>
+</html>
