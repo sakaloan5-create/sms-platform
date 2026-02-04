@@ -1,10 +1,16 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const path = require('path');
 
-// Fly.io 使用 SQLite，数据保存在 Volume 中
-const dbPath = process.env.FLY_IO 
-  ? '/data/database.sqlite' 
-  : path.join(__dirname, '../data/database.sqlite');
+// 数据库路径优先级：DATABASE_URL > FLY_IO > 本地默认
+let dbPath;
+if (process.env.DATABASE_URL) {
+  // 支持 sqlite:/data/database.sqlite 格式
+  dbPath = process.env.DATABASE_URL.replace(/^sqlite:\//, '/');
+} else if (process.env.FLY_IO) {
+  dbPath = '/data/database.sqlite';
+} else {
+  dbPath = path.join(__dirname, '../data/database.sqlite');
+}
 
 const sequelize = new Sequelize({
   dialect: 'sqlite',

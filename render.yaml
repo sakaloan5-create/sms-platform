@@ -15,3 +15,9 @@ services:
         value: 24h
       - key: FRONTEND_URL
         value: https://sakaloan5-create.github.io/sms-platform
+      - key: DATABASE_URL
+        value: sqlite:/data/database.sqlite
+    disk:
+      name: sms-data
+      mountPath: /data
+      sizeGB: 1
