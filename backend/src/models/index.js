@@ -1,20 +1,16 @@
-// 使用 SQLite 代替 PostgreSQL（零配置，无需安装数据库）
 const { Sequelize, DataTypes } = require('sequelize');
 const path = require('path');
 
-// SQLite 配置 - 数据保存在文件里
+// Fly.io 使用 SQLite，数据保存在 Volume 中
+const dbPath = process.env.FLY_IO 
+  ? '/data/database.sqlite' 
+  : path.join(__dirname, '../data/database.sqlite');
+
 const sequelize = new Sequelize({
   dialect: 'sqlite',
-  storage: path.join(__dirname, '../data/database.sqlite'),
+  storage: dbPath,
   logging: false
 });
-
-// 确保数据目录存在
-const fs = require('fs');
-const dataDir = path.join(__dirname, '../data');
-if (!fs.existsSync(dataDir)) {
-  fs.mkdirSync(dataDir, { recursive: true });
-}
 
 // Merchant Model
 const Merchant = sequelize.define('Merchant', {
