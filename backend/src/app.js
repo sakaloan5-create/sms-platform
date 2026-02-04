@@ -42,7 +42,7 @@ i18next.use(i18nextHttpMiddleware.LanguageDetector).init({
 // Security middleware
 app.use(helmet());
 app.use(cors({
-  origin: ['https://sakaloan5-create.github.io', 'http://localhost:3000', 'http://localhost:3001'],
+  origin: ['https://sakaloan5-create.github.io', 'http://localhost:3000', 'http://localhost:3001', 'https://sms-platform-api.onrender.com'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
