@@ -7,15 +7,15 @@ const i18next = require('i18next');
 const i18nextHttpMiddleware = require('i18next-http-middleware');
 const geoip = require('geoip-lite');
 
-const { sequelize } = require('./src/models');
-const logger = require('./src/utils/logger');
-const authRoutes = require('./src/routes/auth.routes');
-const merchantRoutes = require('./src/routes/merchant.routes');
-const adminRoutes = require('./src/routes/admin.routes');
-const messageRoutes = require('./src/routes/message.routes');
-const channelRoutes = require('./src/routes/channel.routes');
-const { errorHandler } = require('./src/middleware/error.middleware');
-const { authenticate } = require('./src/middleware/auth.middleware');
+const { sequelize } = require('./models');
+const logger = require('./utils/logger');
+const authRoutes = require('./routes/auth.routes');
+const merchantRoutes = require('./routes/merchant.routes');
+const adminRoutes = require('./routes/admin.routes');
+const messageRoutes = require('./routes/message.routes');
+const channelRoutes = require('./routes/channel.routes');
+const { errorHandler } = require('./middleware/error.middleware');
+const { authenticate } = require('./middleware/auth.middleware');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -24,10 +24,10 @@ const PORT = process.env.PORT || 3000;
 i18next.use(i18nextHttpMiddleware.LanguageDetector).init({
   fallbackLng: 'en',
   resources: {
-    en: { translation: require('./src/locales/en.json') },
-    zh: { translation: require('./src/locales/zh.json') },
-    es: { translation: require('./src/locales/es.json') },
-    pt: { translation: require('./src/locales/pt.json') }
+    en: { translation: require('./locales/en.json') },
+    zh: { translation: require('./locales/zh.json') },
+    es: { translation: require('./locales/es.json') },
+    pt: { translation: require('./locales/pt.json') }
   },
   detection: {
     order: ['querystring', 'cookie', 'header', 'ip'],
