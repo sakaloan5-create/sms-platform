@@ -3,6 +3,7 @@ const { Op } = require('sequelize');
 const { calculateMessageCost, deductBalance } = require('./billing.service');
 const { selectBestChannel } = require('./channel.service');
 const { broadcastMessageStatus, broadcastBalanceUpdate } = require('./websocket.service');
+const { updateMessageStats } = require('./stats.service');
 const { TwilioProvider } = require('../providers/twilio.provider');
 const { v4: uuidv4 } = require('uuid');
 
@@ -198,6 +199,9 @@ const mockSend = async (message) => {
       deliveredAt: new Date()
     });
     broadcastMessageStatus(message.merchantId, message.id, 'delivered');
+    
+    // Update daily stats
+    await updateMessageStats(message);
     
     if (message.callbackUrl) {
       sendCallback(message.callbackUrl, {

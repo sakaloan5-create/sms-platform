@@ -14,6 +14,7 @@ const logger = require('./utils/logger');
 const { initAdmin } = require('./utils/init');
 const { initWebSocket } = require('./services/websocket.service');
 const { startScheduler } = require('./services/scheduler.service');
+const { cleanupOldStats } = require('./services/stats.service');
 const authRoutes = require('./routes/auth.routes');
 const merchantRoutes = require('./routes/merchant.routes');
 const adminRoutes = require('./routes/admin.routes');
@@ -140,6 +141,10 @@ async function startServer() {
     // Start scheduled message processor
     startScheduler();
     logger.info('Scheduled message processor started');
+    
+    // Start stats cleanup (run daily)
+    setInterval(cleanupOldStats, 24 * 60 * 60 * 1000);
+    logger.info('Stats cleanup scheduled');
     
     server.listen(PORT, () => {
       logger.info(`Server running on port ${PORT}`);
