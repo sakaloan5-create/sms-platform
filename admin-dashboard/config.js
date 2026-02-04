@@ -7,7 +7,7 @@ const API_CONFIG = {
     // 生产环境（部署后）
     // 部署到 Render 后，把这里改成你的 Render 地址，例如：
     // production: 'https://sms-platform-api.onrender.com'
-    production: 'https://smsplatform.loca.lt'
+    production: 'https://sms-platform-api.onrender.com'
 };
 
 // 当前使用的环境
