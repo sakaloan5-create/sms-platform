@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,10 +21,110 @@
             background: var(--bg);
             color: #333;
         }
-        .layout {
-            display: flex;
+        .hidden { display: none !important; }
+        
+        /* Login Page */
+        .login-page {
             min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
         }
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .login-box h1 {
+            text-align: center;
+            margin-bottom: 8px;
+            color: var(--primary-dark);
+        }
+        .login-box p {
+            text-align: center;
+            color: #666;
+            margin-bottom: 32px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+        .btn-block { width: 100%; }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-secondary {
+            background: white;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+        .btn-secondary:hover { background: #f5f5f5; }
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .error-msg {
+            color: var(--error);
+            font-size: 14px;
+            margin-top: 8px;
+            text-align: center;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 24px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        .tab.active {
+            border-bottom-color: var(--primary);
+            color: var(--primary);
+        }
+        
         /* Language Selector */
         .lang-selector {
             position: fixed;
@@ -49,14 +149,14 @@
             color: #666;
             transition: all 0.2s;
         }
-        .lang-btn:hover {
-            background: #f0f0f0;
+        .lang-btn:hover { background: #f0f0f0; }
+        .lang-btn.active { background: var(--primary); color: white; }
+        
+        /* Layout */
+        .layout {
+            display: flex;
+            min-height: 100vh;
         }
-        .lang-btn.active {
-            background: var(--primary);
-            color: white;
-        }
-        /* Sidebar */
         .sidebar {
             width: 280px;
             background: var(--sidebar);
@@ -113,25 +213,6 @@
             font-size: 14px;
             opacity: 0.9;
         }
-        .balance-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 12px;
-        }
-        .balance-btn {
-            flex: 1;
-            padding: 8px;
-            border: 1px solid rgba(255,255,255,0.3);
-            background: rgba(255,255,255,0.1);
-            color: white;
-            border-radius: 6px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .balance-btn:hover {
-            background: rgba(255,255,255,0.2);
-        }
         .nav-menu {
             padding: 16px 0;
         }
@@ -152,6 +233,10 @@
             text-decoration: none;
             color: #475569;
             border-left: 3px solid transparent;
+            background: none;
+            border: none;
+            width: 100%;
+            font-size: 14px;
         }
         .nav-item:hover {
             background: #f1f5f9;
@@ -168,13 +253,11 @@
             width: 24px;
             text-align: center;
         }
-        /* Main */
         .main {
             flex: 1;
             margin-left: 280px;
             padding: 80px 24px 24px;
         }
-        /* Header */
         .page-header {
             margin-bottom: 24px;
         }
@@ -187,6 +270,7 @@
         .page-subtitle {
             color: #64748b;
         }
+        
         /* Cards */
         .card {
             background: white;
@@ -209,60 +293,7 @@
         .card-body {
             padding: 24px;
         }
-        /* Quick Actions */
-        .quick-actions {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-        .action-card {
-            background: white;
-            padding: 24px;
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            cursor: pointer;
-            transition: all 0.2s;
-            border: 2px solid transparent;
-        }
-        .action-card:hover {
-            border-color: var(--primary);
-            transform: translateY(-2px);
-        }
-        .action-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            margin-bottom: 16px;
-        }
-        .action-card.send .action-icon {
-            background: #eff6ff;
-            color: var(--primary);
-        }
-        .action-card.history .action-icon {
-            background: #f0fdf4;
-            color: var(--success);
-        }
-        .action-card.api .action-icon {
-            background: #fef3c7;
-            color: #f59e0b;
-        }
-        .action-card.subaccount .action-icon {
-            background: #f3e8ff;
-            color: #9333ea;
-        }
-        .action-title {
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-        .action-desc {
-            font-size: 14px;
-            color: #64748b;
-        }
+        
         /* Stats */
         .stats-grid {
             display: grid;
@@ -296,6 +327,7 @@
         .stat-card .change.positive {
             color: var(--success);
         }
+        
         /* Table */
         .table-container {
             overflow-x: auto;
@@ -316,9 +348,7 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        tr:hover {
-            background: #f8fafc;
-        }
+        tr:hover { background: #f8fafc; }
         .status-badge {
             display: inline-flex;
             align-items: center;
@@ -327,249 +357,424 @@
             font-size: 12px;
             font-weight: 500;
         }
-        .status-badge.sent {
-            background: #dbeafe;
-            color: #1d4ed8;
+        .status-badge.sent { background: #dbeafe; color: #1d4ed8; }
+        .status-badge.delivered { background: #d1fae5; color: #059669; }
+        .status-badge.failed { background: #fee2e2; color: #dc2626; }
+        .status-badge.pending { background: #fef3c7; color: #d97706; }
+        
+        /* Send Form */
+        .send-form {
+            max-width: 600px;
         }
-        .status-badge.delivered {
-            background: #d1fae5;
-            color: #059669;
+        .char-counter {
+            text-align: right;
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
         }
-        .status-badge.failed {
-            background: #fee2e2;
-            color: #dc2626;
-        }
-        /* Buttons */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
+        .cost-preview {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            padding: 16px;
             border-radius: 8px;
-            font-weight: 500;
-            cursor: pointer;
-            border: none;
-            transition: all 0.2s;
+            margin-top: 16px;
         }
-        .btn-primary {
-            background: var(--primary);
-            color: white;
+        .phone-list {
+            margin-top: 8px;
         }
-        .btn-primary:hover {
-            background: var(--primary-dark);
+        .phone-list textarea {
+            font-family: monospace;
+            min-height: 120px;
         }
-        .btn-secondary {
+        
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-content {
             background: white;
-            color: #475569;
-            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
         }
-        .btn-secondary:hover {
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-body { padding: 20px; }
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+        
+        /* API Keys */
+        .api-key-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
             background: #f8fafc;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+        .api-key-value {
+            font-family: monospace;
+            background: #e2e8f0;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #fff;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
         }
     </style>
 </head>
 <body>
     <!-- Language Selector -->
     <div class="lang-selector">
-        <button class="lang-btn active" data-lang="pt" onclick="setLanguage('pt')">🇧🇷 Português</button>
-        <button class="lang-btn" data-lang="en" onclick="setLanguage('en')">🇺🇸 English</button>
-        <button class="lang-btn" data-lang="es" onclick="setLanguage('es')">🇪🇸 Español</button>
+        <button class="lang-btn" data-lang="en" onclick="setLanguage('en')">🇺🇸 EN</button>
         <button class="lang-btn" data-lang="zh" onclick="setLanguage('zh')">🇨🇳 中文</button>
+        <button class="lang-btn active" data-lang="pt" onclick="setLanguage('pt')">🇧🇷 PT</button>
+        <button class="lang-btn" data-lang="es" onclick="setLanguage('es')">🇪🇸 ES</button>
     </div>
 
-    <div class="layout">
-        <!-- Sidebar -->
+    <!-- Login Page -->
+    <div id="loginPage" class="login-page">
+        <div class="login-box">
+            <h1>📱 SMS Platform</h1>
+            <p data-i18n="login.subtitle">Merchant Portal</p>
+            
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('login')" data-i18n="login.title">Login</div>
+                <div class="tab" onclick="switchTab('register')" data-i18n="register.title">Register</div>
+            </div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label data-i18n="login.email">Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="login.password">Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <div id="loginError" class="error-msg hidden"></div>
+                <button type="submit" class="btn btn-primary btn-block" id="loginBtn">
+                    <span id="loginBtnText" data-i18n="login.button">Login</span>
+                </button>
+            </form>
+            
+            <form id="registerForm" class="hidden">
+                <div class="form-group">
+                    <label data-i18n="register.name">Company Name</label>
+                    <input type="text" id="regName" required>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="register.email">Email</label>
+                    <input type="email" id="regEmail" required>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="register.phone">Phone</label>
+                    <input type="tel" id="regPhone">
+                </div>
+                <div class="form-group">
+                    <label data-i18n="register.password">Password</label>
+                    <input type="password" id="regPassword" required>
+                </div>
+                <div id="registerError" class="error-msg hidden"></div>
+                <button type="submit" class="btn btn-primary btn-block" id="registerBtn">
+                    <span id="registerBtnText" data-i18n="register.button">Register</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="app" class="layout hidden">
         <aside class="sidebar">
             <div class="sidebar-header">
                 <div class="brand">
                     <div class="logo">📱</div>
                     <div class="brand-text">
                         <h1>SMS Platform</h1>
-                        <p>Merchant Portal</p>
+                        <p data-i18n="merchant.portal">Merchant Portal</p>
                     </div>
                 </div>
                 
                 <div class="balance-card">
-                    <div class="balance-label" data-i18n="balance.title">Saldo Disponível</div>
+                    <div class="balance-label" data-i18n="balance.title">Available Balance</div>
                     <div>
-                        <span class="balance-value">$12,450.00</span>
+                        <span class="balance-value" id="balanceValue">$0.00</span>
                         <span class="balance-currency">USD</span>
-                    </div>
-                    <div class="balance-actions">
-                        <button class="balance-btn" data-i18n="balance.recharge">Recarregar</button>
-                        <button class="balance-btn" data-i18n="balance.history">Histórico</button>
                     </div>
                 </div>
             </div>
             
             <nav class="nav-menu">
-                <div class="nav-section" data-i18n="nav.main">Principal</div>
-                <a href="#" class="nav-item active">
+                <div class="nav-section" data-i18n="nav.main">Main</div>
+                <button class="nav-item active" data-page="dashboard">
                     <i class="mdi mdi-view-dashboard"></i>
                     <span data-i18n="nav.dashboard">Dashboard</span>
-                </a>
+                </button>
                 
-                <div class="nav-section" data-i18n="nav.messages">Mensagens</div>
-                <a href="#" class="nav-item">
+                <div class="nav-section" data-i18n="nav.messages">Messages</div>
+                <button class="nav-item" data-page="send">
                     <i class="mdi mdi-send"></i>
-                    <span data-i18n="nav.send">Enviar SMS</span>
-                </a>
-                <a href="#" class="nav-item">
+                    <span data-i18n="nav.send">Send SMS</span>
+                </button>
+                <button class="nav-item" data-page="history">
                     <i class="mdi mdi-history"></i>
-                    <span data-i18n="nav.history">Histórico</span>
-                </a>
-                <a href="#" class="nav-item">
-                    <i class="mdi mdi-file-chart"></i>
-                    <span data-i18n="nav.reports">Relatórios</span>
-                </a>
+                    <span data-i18n="nav.history">History</span>
+                </button>
                 
-                <div class="nav-section" data-i18n="nav.settings">Configurações</div>
-                <a href="#" class="nav-item">
+                <div class="nav-section" data-i18n="nav.settings">Settings</div>
+                <button class="nav-item" data-page="apikeys">
                     <i class="mdi mdi-key"></i>
                     <span data-i18n="nav.api">API Keys</span>
-                </a>
-                <a href="#" class="nav-item">
-                    <i class="mdi mdi-account-group"></i>
-                    <span data-i18n="nav.subaccounts">Sub-contas</span>
-                </a>
-                <a href="#" class="nav-item">
-                    <i class="mdi mdi-cog"></i>
-                    <span data-i18n="nav.profile">Perfil</span>
-                </a>
+                </button>
+                <button class="nav-item" data-page="profile">
+                    <i class="mdi mdi-account"></i>
+                    <span data-i18n="nav.profile">Profile</span>
+                </button>
+                
+                <button class="nav-item" onclick="logout()">
+                    <i class="mdi mdi-logout"></i>
+                    <span data-i18n="nav.logout">Logout</span>
+                </button>
             </nav>
         </aside>
 
-        <!-- Main Content -->
         <main class="main">
-            <div class="page-header">
-                <h1 class="page-title" data-i18n="dashboard.title">Dashboard</h1>
-                <p class="page-subtitle" data-i18n="dashboard.welcome">Bem-vindo de volta! Aqui está o resumo da sua conta.</p>
-            </div>
+            <!-- Dashboard Page -->
+            <div id="page-dashboard">
+                <div class="page-header">
+                    <h1 class="page-title" data-i18n="dashboard.title">Dashboard</h1>
+                    <p class="page-subtitle" data-i18n="dashboard.welcome">Welcome back!</p>
+                </div>
 
-            <!-- Quick Actions -->
-            <div class="quick-actions">
-                <div class="action-card send">
-                    <div class="action-icon">📤</div>
-                    <div class="action-title" data-i18n="actions.send">Enviar SMS</div>
-                    <div class="action-desc" data-i18n="actions.sendDesc">Envie mensagens individuais ou em massa</div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="label" data-i18n="stats.sent">Messages Sent</div>
+                        <div class="value" id="stat-sent">0</div>
+                        <div class="change positive">+<span id="stat-sent-today">0</span> today</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="label" data-i18n="stats.delivered">Delivered</div>
+                        <div class="value" id="stat-delivered">0</div>
+                        <div class="change positive" id="stat-rate">0%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="label" data-i18n="stats.spent">Total Spent</div>
+                        <div class="value" id="stat-spent">$0.00</div>
+                    </div>
                 </div>
-                
-                <div class="action-card history">
-                    <div class="action-icon">📊</div>
-                    <div class="action-title" data-i18n="actions.history">Histórico</div>
-                    <div class="action-desc" data-i18n="actions.historyDesc">Visualize relatórios detalhados</div>
-                </div>
-                
-                <div class="action-card api">
-                    <div class="action-icon">🔑</div>
-                    <div class="action-title" data-i18n="actions.api">API Keys</div>
-                    <div class="action-desc" data-i18n="actions.apiDesc">Gerencie suas chaves de API</div>
-                </div>
-                
-                <div class="action-card subaccount">
-                    <div class="action-icon">👥</div>
-                    <div class="action-title" data-i18n="actions.subaccount">Sub-contas</div>
-                    <div class="action-desc" data-i18n="actions.subaccountDesc">Gerencie membros da equipe</div>
-                </div>
-            </div>
 
-            <!-- Stats -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="label" data-i18n="stats.today">Envios Hoje</div>
-                    <div class="value">12,847</div>
-                    <div class="change positive">
-                        <i class="mdi mdi-arrow-up"></i>
-                        <span>23% vs ontem</span>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title" data-i18n="recent.title">Recent Messages</div>
                     </div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="label" data-i18n="stats.delivered">Taxa de Entrega</div>
-                    <div class="value" style="color: var(--success);">98.7%</div>
-                    <div class="change positive">
-                        <i class="mdi mdi-check-circle"></i>
-                        <span>Excelente</span>
-                    </div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="label" data-i18n="stats.spent">Gasto Hoje</div>
-                    <div class="value">$642.35</div>
-                    <div class="change" style="color: #64748b;">
-                        <span>$0.05 / SMS médio</span>
-                    </div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="label" data-i18n="stats.remaining">Saldo Restante</div>
-                    <div class="value">~249K</div>
-                    <div class="change" style="color: #64748b;">
-                        <span>SMS estimados</span>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>To</th>
+                                        <th>Content</th>
+                                        <th>Cost</th>
+                                        <th>Status</th>
+                                        <th>Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentMessagesTable"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Recent Messages -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title" data-i18n="recent.title">Envios Recentes</div>
-                    <button class="btn btn-secondary" data-i18n="recent.viewAll">Ver Todos</button>
+            <!-- Send Page -->
+            <div id="page-send" class="hidden">
+                <div class="page-header">
+                    <h1 class="page-title" data-i18n="send.title">Send SMS</h1>
                 </div>
-                
-                <div class="card-body">
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th data-i18n="table.id">ID</th>
-                                    <th data-i18n="table.phone">Telefone</th>
-                                    <th data-i18n="table.message">Mensagem</th>
-                                    <th data-i18n="table.country">País</th>
-                                    <th data-i18n="table.cost">Custo</th>
-                                    <th data-i18n="table.status">Status</th>
-                                    <th data-i18n="table.time">Hora</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>#MSG2847</td>
-                                    <td>+55 11 99999-9999</td>
-                                    <td>Seu código de verificação é: 123456</td>
-                                    <td>🇧🇷 Brasil</td>
-                                    <td>$0.05</td>
-                                    <td><span class="status-badge delivered">Entregue</span></td>
-                                    <td>14:32:05</td>
-                                </tr>
-                                <tr>
-                                    <td>#MSG2846</td>
-                                    <td>+1 555 123-4567</td>
-                                    <td>Your order #12345 has been shipped!</td>
-                                    <td>🇺🇸 EUA</td>
-                                    <td>$0.08</td>
-                                    <td><span class="status-badge delivered">Entregue</span></td>
-                                    <td>14:28:33</td>
-                                </tr>
-                                <tr>
-                                    <td>#MSG2845</td>
-                                    <td>+52 55 1234-5678</td>
-                                    <td>¡Hola! Tu código de descuento es DESC20</td>
-                                    <td>🇲🇽 México</td>
-                                    <td>$0.06</td>
-                                    <td><span class="status-badge sent">Enviado</span></td>
-                                    <td>14:25:18</td>
-                                </tr>
-                                <tr>
-                                    <td>#MSG2844</td>
-                                    <td>+54 9 11 1234-5678</td>
-                                    <td>Tu pedido está listo para retirar</td>
-                                    <td>🇦🇷 Argentina</td>
-                                    <td>$0.07</td>
-                                    <td><span class="status-badge failed">Falhou</span></td>
-                                    <td>14:20:42</td>
-                                </tr>
-                            </tbody>
-                        </table>
+
+                <div class="card">
+                    <div class="card-body">
+                        <form id="sendForm" class="send-form">
+                            <div class="form-group">
+                                <label>Message Type</label>
+                                <select id="msgType">
+                                    <option value="single">Single Message</option>
+                                    <option value="bulk">Bulk Messages</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group" id="singleRecipient">
+                                <label>Phone Number</label>
+                                <input type="tel" id="phoneNumber" placeholder="+1 555 123-4567">
+                            </div>
+                            
+                            <div class="form-group hidden" id="bulkRecipients">
+                                <label>Phone Numbers (one per line)</label>
+                                <div class="phone-list">
+                                    <textarea id="phoneList" placeholder="+1 555 123-4567
++1 555 123-4568
++1 555 123-4569"></textarea>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Message Content</label>
+                                <textarea id="messageContent" maxlength="1600" required></textarea>
+                                <div class="char-counter">
+                                    <span id="charCount">0</span> chars | 
+                                    <span id="segmentCount">1</span> segments | 
+                                    Est. cost: $<span id="costEstimate">0.00</span>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">
+                                <i class="mdi mdi-send"></i>
+                                <span id="sendBtnText">Send Message</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History Page -->
+            <div id="page-history" class="hidden">
+                <div class="page-header">
+                    <h1 class="page-title" data-i18n="history.title">Message History</h1>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>To</th>
+                                        <th>Content</th>
+                                        <th>Segments</th>
+                                        <th>Cost</th>
+                                        <th>Status</th>
+                                        <th>Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="historyTable"></tbody>
+                            </table>
+                        </div>
+                        <div id="historyEmpty" class="empty-state hidden">
+                            <i class="mdi mdi-message-off"></i>
+                            <p>No messages yet</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- API Keys Page -->
+            <div id="page-apikeys" class="hidden">
+                <div class="page-header">
+                    <h1 class="page-title" data-i18n="api.title">API Keys</h1>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Your API Keys</div>
+                    </div>
+                    <div class="card-body">
+                        <p style="color: #666; margin-bottom: 16px;">
+                            Use these keys to access the SMS API programmatically.
+                        </p>
+                        <div class="api-key-item">
+                            <div>
+                                <div style="font-weight: 600; margin-bottom: 4px;">API Key</div>
+                                <div class="api-key-value" id="apiKeyDisplay">••••••••••••••••</div>
+                            </div>
+                            <button class="btn btn-secondary" onclick="toggleApiKey()">
+                                <i class="mdi mdi-eye"></i> Show
+                            </button>
+                        </div>
+                        
+                        <div style="background: #f0f9ff; border: 1px solid #bae6fd; padding: 16px; border-radius: 8px; margin-top: 16px;">
+                            <div style="font-weight: 600; margin-bottom: 8px;">API Endpoint</div>
+                            <code id="apiEndpoint">http://localhost:3001/api/messages/send</code>
+                            <pre style="margin-top: 16px; background: #1e293b; color: #e2e8f0; padding: 16px; border-radius: 8px; overflow-x: auto; font-size: 12px;">
+POST /api/messages/send
+Content-Type: application/json
+Authorization: Bearer YOUR_API_KEY
+
+{
+  "to": "+1234567890",
+  "content": "Hello World!"
+}
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Page -->
+            <div id="page-profile" class="hidden">
+                <div class="page-header">
+                    <h1 class="page-title" data-i18n="profile.title">Profile</h1>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <form id="profileForm">
+                            <div class="form-group">
+                                <label>Company Name</label>
+                                <input type="text" id="profileName">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" id="profileEmail" readonly>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Phone</label>
+                                <input type="tel" id="profilePhone">
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -577,53 +782,82 @@
     </div>
 
     <script>
+        // API Base URL - 修改为你的后端地址
+        const API_BASE = localStorage.getItem('apiBase') || 'http://localhost:3001';
+        
+        // State
+        let currentUser = null;
+        let messages = [];
+        let apiKeyVisible = false;
+        
+        // Translations
         const translations = {
-            pt: {
-                balance: { title: 'Saldo Disponível', recharge: 'Recarregar', history: 'Histórico' },
-                nav: { main: 'Principal', messages: 'Mensagens', settings: 'Configurações', dashboard: 'Dashboard', send: 'Enviar SMS', history: 'Histórico', reports: 'Relatórios', api: 'API Keys', subaccounts: 'Sub-contas', profile: 'Perfil' },
-                dashboard: { title: 'Dashboard', welcome: 'Bem-vindo de volta! Aqui está o resumo da sua conta.' },
-                actions: { send: 'Enviar SMS', sendDesc: 'Envie mensagens individuais ou em massa', history: 'Histórico', historyDesc: 'Visualize relatórios detalhados', api: 'API Keys', apiDesc: 'Gerencie suas chaves de API', subaccount: 'Sub-contas', subaccountDesc: 'Gerencie membros da equipe' },
-                stats: { today: 'Envios Hoje', delivered: 'Taxa de Entrega', spent: 'Gasto Hoje', remaining: 'Saldo Restante' },
-                recent: { title: 'Envios Recentes', viewAll: 'Ver Todos' },
-                table: { id: 'ID', phone: 'Telefone', message: 'Mensagem', country: 'País', cost: 'Custo', status: 'Status', time: 'Hora' }
-            },
             en: {
-                balance: { title: 'Available Balance', recharge: 'Recharge', history: 'History' },
-                nav: { main: 'Main', messages: 'Messages', settings: 'Settings', dashboard: 'Dashboard', send: 'Send SMS', history: 'History', reports: 'Reports', api: 'API Keys', subaccounts: 'Sub-accounts', profile: 'Profile' },
-                dashboard: { title: 'Dashboard', welcome: 'Welcome back! Here is your account summary.' },
-                actions: { send: 'Send SMS', sendDesc: 'Send individual or bulk messages', history: 'History', historyDesc: 'View detailed reports', api: 'API Keys', apiDesc: 'Manage your API keys', subaccount: 'Sub-accounts', subaccountDesc: 'Manage team members' },
-                stats: { today: "Today's Sends", delivered: 'Delivery Rate', spent: "Today's Spent", remaining: 'Remaining Balance' },
-                recent: { title: 'Recent Messages', viewAll: 'View All' },
-                table: { id: 'ID', phone: 'Phone', message: 'Message', country: 'Country', cost: 'Cost', status: 'Status', time: 'Time' }
-            },
-            es: {
-                balance: { title: 'Saldo Disponible', recharge: 'Recargar', history: 'Historial' },
-                nav: { main: 'Principal', messages: 'Mensajes', settings: 'Configuración', dashboard: 'Panel', send: 'Enviar SMS', history: 'Historial', reports: 'Reportes', api: 'API Keys', subaccounts: 'Sub-cuentas', profile: 'Perfil' },
-                dashboard: { title: 'Panel', welcome: '¡Bienvenido de vuelta! Aquí está el resumen de su cuenta.' },
-                actions: { send: 'Enviar SMS', sendDesc: 'Envíe mensajes individuales o masivos', history: 'Historial', historyDesc: 'Vea informes detallados', api: 'API Keys', apiDesc: 'Gestione sus claves API', subaccount: 'Sub-cuentas', subaccountDesc: 'Gestione miembros del equipo' },
-                stats: { today: 'Envíos Hoy', delivered: 'Tasa de Entrega', spent: 'Gasto Hoy', remaining: 'Saldo Restante' },
-                recent: { title: 'Envíos Recientes', viewAll: 'Ver Todos' },
-                table: { id: 'ID', phone: 'Teléfono', message: 'Mensaje', country: 'País', cost: 'Costo', status: 'Estado', time: 'Hora' }
+                login: { subtitle: 'Merchant Portal', title: 'Login', email: 'Email', password: 'Password', button: 'Login' },
+                register: { title: 'Register', name: 'Company Name', email: 'Email', phone: 'Phone', password: 'Password', button: 'Register' },
+                merchant: { portal: 'Merchant Portal' },
+                balance: { title: 'Available Balance' },
+                nav: { main: 'Main', messages: 'Messages', settings: 'Settings', dashboard: 'Dashboard', send: 'Send SMS', history: 'History', api: 'API Keys', profile: 'Profile', logout: 'Logout' },
+                dashboard: { title: 'Dashboard', welcome: 'Welcome back!' },
+                stats: { sent: 'Messages Sent', delivered: 'Delivered', spent: 'Total Spent' },
+                recent: { title: 'Recent Messages' },
+                send: { title: 'Send SMS' },
+                history: { title: 'Message History' },
+                api: { title: 'API Keys' },
+                profile: { title: 'Profile' }
             },
             zh: {
-                balance: { title: '可用余额', recharge: '充值', history: '记录' },
-                nav: { main: '主要', messages: '消息', settings: '设置', dashboard: '控制台', send: '发送短信', history: '历史记录', reports: '报表', api: 'API密钥', subaccounts: '子账号', profile: '个人资料' },
-                dashboard: { title: '控制台', welcome: '欢迎回来！这是您的账户概览。' },
-                actions: { send: '发送短信', sendDesc: '发送单条或批量消息', history: '历史', historyDesc: '查看详细报告', api: 'API密钥', apiDesc: '管理您的API密钥', subaccount: '子账号', subaccountDesc: '管理团队成员' },
-                stats: { today: '今日发送', delivered: '送达率', spent: '今日花费', remaining: '剩余余额' },
-                recent: { title: '最近发送', viewAll: '查看全部' },
-                table: { id: 'ID', phone: '手机号', message: '消息内容', country: '国家', cost: '费用', status: '状态', time: '时间' }
+                login: { subtitle: '商户门户', title: '登录', email: '邮箱', password: '密码', button: '登录' },
+                register: { title: '注册', name: '公司名称', email: '邮箱', phone: '电话', password: '密码', button: '注册' },
+                merchant: { portal: '商户门户' },
+                balance: { title: '可用余额' },
+                nav: { main: '主要', messages: '消息', settings: '设置', dashboard: '控制台', send: '发送短信', history: '历史记录', api: 'API密钥', profile: '个人资料', logout: '退出' },
+                dashboard: { title: '控制台', welcome: '欢迎回来！' },
+                stats: { sent: '已发送', delivered: '已送达', spent: '总花费' },
+                recent: { title: '最近消息' },
+                send: { title: '发送短信' },
+                history: { title: '消息历史' },
+                api: { title: 'API密钥' },
+                profile: { title: '个人资料' }
+            },
+            pt: {
+                login: { subtitle: 'Portal do Comerciante', title: 'Entrar', email: 'E-mail', password: 'Senha', button: 'Entrar' },
+                register: { title: 'Cadastrar', name: 'Nome da Empresa', email: 'E-mail', phone: 'Telefone', password: 'Senha', button: 'Cadastrar' },
+                merchant: { portal: 'Portal do Comerciante' },
+                balance: { title: 'Saldo Disponível' },
+                nav: { main: 'Principal', messages: 'Mensagens', settings: 'Configurações', dashboard: 'Painel', send: 'Enviar SMS', history: 'Histórico', api: 'API Keys', profile: 'Perfil', logout: 'Sair' },
+                dashboard: { title: 'Painel', welcome: 'Bem-vindo de volta!' },
+                stats: { sent: 'Mensagens Enviadas', delivered: 'Entregues', spent: 'Total Gasto' },
+                recent: { title: 'Mensagens Recentes' },
+                send: { title: 'Enviar SMS' },
+                history: { title: 'Histórico de Mensagens' },
+                api: { title: 'API Keys' },
+                profile: { title: 'Perfil' }
+            },
+            es: {
+                login: { subtitle: 'Portal del Comerciante', title: 'Iniciar sesión', email: 'Correo electrónico', password: 'Contraseña', button: 'Iniciar sesión' },
+                register: { title: 'Registrarse', name: 'Nombre de la Empresa', email: 'Correo electrónico', phone: 'Teléfono', password: 'Contraseña', button: 'Registrarse' },
+                merchant: { portal: 'Portal del Comerciante' },
+                balance: { title: 'Saldo Disponible' },
+                nav: { main: 'Principal', messages: 'Mensajes', settings: 'Configuración', dashboard: 'Panel', send: 'Enviar SMS', history: 'Historial', api: 'API Keys', profile: 'Perfil', logout: 'Salir' },
+                dashboard: { title: 'Panel', welcome: '¡Bienvenido de vuelta!' },
+                stats: { sent: 'Mensajes Enviados', delivered: 'Entregados', spent: 'Total Gastado' },
+                recent: { title: 'Mensajes Recientes' },
+                send: { title: 'Enviar SMS' },
+                history: { title: 'Historial de Mensajes' },
+                api: { title: 'API Keys' },
+                profile: { title: 'Perfil' }
             }
         };
-
+        
         function setLanguage(lang) {
             document.querySelectorAll('.lang-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.lang === lang);
             });
             
             const t = translations[lang];
+            if (!t) return;
             
-            // Update all translatable elements
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const keys = el.dataset.i18n.split('.');
                 let value = t;
@@ -634,18 +868,370 @@
             });
             
             document.documentElement.lang = lang === 'zh' ? 'zh-CN' : lang === 'pt' ? 'pt-BR' : lang === 'es' ? 'es-ES' : 'en';
+            localStorage.setItem('language', lang);
         }
-
-        // Auto-detect language from IP (simulated)
-        function detectLanguage() {
-            // In real implementation, this would use IP geolocation
-            // For now, default to Portuguese
-            return 'pt';
+        
+        // Auth Token
+        function getToken() {
+            return localStorage.getItem('merchantToken');
         }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const lang = detectLanguage();
-            setLanguage(lang);
+        
+        function setToken(token) {
+            localStorage.setItem('merchantToken', token);
+        }
+        
+        function clearToken() {
+            localStorage.removeItem('merchantToken');
+            localStorage.removeItem('currentMerchant');
+        }
+        
+        // API Helper
+        async function api(url, options = {}) {
+            const token = getToken();
+            const res = await fetch(`${API_BASE}${url}`, {
+                ...options,
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(token && { 'Authorization': `Bearer ${token}` }),
+                    ...options.headers
+                }
+            });
+            
+            if (res.status === 401) {
+                logout();
+                return;
+            }
+            
+            const data = await res.json().catch(() => null);
+            
+            if (!res.ok) {
+                throw new Error(data?.error || 'Request failed');
+            }
+            
+            return data;
+        }
+        
+        // Tab Switching
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (tab === 'login') {
+                document.getElementById('loginForm').classList.remove('hidden');
+                document.getElementById('registerForm').classList.add('hidden');
+            } else {
+                document.getElementById('loginForm').classList.add('hidden');
+                document.getElementById('registerForm').classList.remove('hidden');
+            }
+        }
+        
+        // Login
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('loginBtn');
+            const btnText = document.getElementById('loginBtnText');
+            const errorDiv = document.getElementById('loginError');
+            
+            btn.disabled = true;
+            btnText.innerHTML = '<span class="loading"></span>';
+            errorDiv.classList.add('hidden');
+            
+            try {
+                const data = await api('/api/auth/login', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        email: document.getElementById('loginEmail').value,
+                        password: document.getElementById('loginPassword').value
+                    })
+                });
+                
+                setToken(data.token);
+                currentUser = data.merchant;
+                localStorage.setItem('currentMerchant', JSON.stringify(currentUser));
+                
+                showApp();
+                loadDashboard();
+            } catch (err) {
+                errorDiv.textContent = err.message;
+                errorDiv.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btnText.textContent = translations[getLanguage()].login.button;
+            }
+        });
+        
+        // Register
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('registerBtn');
+            const btnText = document.getElementById('registerBtnText');
+            const errorDiv = document.getElementById('registerError');
+            
+            btn.disabled = true;
+            btnText.innerHTML = '<span class="loading"></span>';
+            errorDiv.classList.add('hidden');
+            
+            try {
+                await api('/api/auth/register', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        name: document.getElementById('regName').value,
+                        email: document.getElementById('regEmail').value,
+                        password: document.getElementById('regPassword').value,
+                        phone: document.getElementById('regPhone').value
+                    })
+                });
+                
+                alert('Registration successful! Please wait for admin approval.');
+                switchTab('login');
+            } catch (err) {
+                errorDiv.textContent = err.message;
+                errorDiv.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btnText.textContent = translations[getLanguage()].register.button;
+            }
+        });
+        
+        // Logout
+        function logout() {
+            clearToken();
+            location.reload();
+        }
+        
+        // Navigation
+        document.querySelectorAll('.nav-item[data-page]').forEach(item => {
+            item.addEventListener('click', () => {
+                const page = item.dataset.page;
+                showPage(page);
+                
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+        
+        function showPage(page) {
+            document.querySelectorAll('[id^="page-"]').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`page-${page}`).classList.remove('hidden');
+            
+            if (page === 'dashboard') loadDashboard();
+            if (page === 'history') loadHistory();
+            if (page === 'profile') loadProfile();
+        }
+        
+        // Load Dashboard
+        async function loadDashboard() {
+            try {
+                const profile = await api('/api/merchant/profile');
+                document.getElementById('balanceValue').textContent = '$' + parseFloat(profile.balance || 0).toFixed(2);
+                
+                const history = await api('/api/merchant/messages?limit=5');
+                messages = history.messages || [];
+                
+                const totalSent = messages.length;
+                const delivered = messages.filter(m => m.status === 'delivered').length;
+                const rate = totalSent > 0 ? Math.round((delivered / totalSent) * 100) : 0;
+                
+                document.getElementById('stat-sent').textContent = totalSent;
+                document.getElementById('stat-delivered').textContent = delivered;
+                document.getElementById('stat-rate').textContent = rate + '%';
+                
+                renderMessagesTable('recentMessagesTable', messages.slice(0, 5));
+            } catch (err) {
+                console.error('Load dashboard error:', err);
+            }
+        }
+        
+        // Load History
+        async function loadHistory() {
+            try {
+                const history = await api('/api/merchant/messages?limit=50');
+                messages = history.messages || [];
+                
+                const tbody = document.getElementById('historyTable');
+                const empty = document.getElementById('historyEmpty');
+                
+                if (messages.length === 0) {
+                    tbody.innerHTML = '';
+                    empty.classList.remove('hidden');
+                    return;
+                }
+                
+                empty.classList.add('hidden');
+                renderMessagesTable('historyTable', messages);
+            } catch (err) {
+                console.error('Load history error:', err);
+            }
+        }
+        
+        function renderMessagesTable(tableId, msgs) {
+            const tbody = document.getElementById(tableId);
+            tbody.innerHTML = msgs.map(m => `
+                <tr>
+                    <td>${m.to || m.phoneNumber || '-'}</td>
+                    <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${m.content}</td>
+                    ${tableId === 'historyTable' ? `<td>${m.segments || 1}</td>` : ''}
+                    <td>$${parseFloat(m.cost || 0).toFixed(2)}</td>
+                    <td><span class="status-badge ${m.status}">${m.status}</span></td>
+                    <td>${formatDate(m.createdAt)}</td>
+                </tr>
+            `).join('');
+        }
+        
+        // Send Message
+        document.getElementById('msgType').addEventListener('change', (e) => {
+            if (e.target.value === 'bulk') {
+                document.getElementById('singleRecipient').classList.add('hidden');
+                document.getElementById('bulkRecipients').classList.remove('hidden');
+                document.getElementById('sendBtnText').textContent = 'Send Bulk Messages';
+            } else {
+                document.getElementById('singleRecipient').classList.remove('hidden');
+                document.getElementById('bulkRecipients').classList.add('hidden');
+                document.getElementById('sendBtnText').textContent = 'Send Message';
+            }
+            updateCostEstimate();
+        });
+        
+        document.getElementById('messageContent').addEventListener('input', updateCostEstimate);
+        
+        function updateCostEstimate() {
+            const content = document.getElementById('messageContent').value;
+            const isUnicode = /[^\x00-\x7F]/.test(content);
+            const maxLength = isUnicode ? 70 : 160;
+            const segments = Math.ceil(content.length / maxLength) || 1;
+            const pricePerSegment = 0.05;
+            
+            const isBulk = document.getElementById('msgType').value === 'bulk';
+            let recipients = 1;
+            if (isBulk) {
+                const phones = document.getElementById('phoneList').value.split('\n').filter(p => p.trim());
+                recipients = phones.length || 1;
+            }
+            
+            document.getElementById('charCount').textContent = content.length;
+            document.getElementById('segmentCount').textContent = segments;
+            document.getElementById('costEstimate').textContent = (segments * pricePerSegment * recipients).toFixed(2);
+        }
+        
+        document.getElementById('sendForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading"></span> Sending...';
+            
+            try {
+                const isBulk = document.getElementById('msgType').value === 'bulk';
+                
+                if (isBulk) {
+                    const phones = document.getElementById('phoneList').value.split('\n').filter(p => p.trim());
+                    await api('/api/messages/bulk', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            recipients: phones,
+                            content: document.getElementById('messageContent').value
+                        })
+                    });
+                } else {
+                    await api('/api/messages/send', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            to: document.getElementById('phoneNumber').value,
+                            content: document.getElementById('messageContent').value
+                        })
+                    });
+                }
+                
+                alert('Message sent successfully!');
+                document.getElementById('messageContent').value = '';
+                document.getElementById('phoneNumber').value = '';
+                document.getElementById('phoneList').value = '';
+                updateCostEstimate();
+                loadDashboard();
+            } catch (err) {
+                alert(err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        });
+        
+        // API Key Toggle
+        function toggleApiKey() {
+            apiKeyVisible = !apiKeyVisible;
+            const display = document.getElementById('apiKeyDisplay');
+            if (apiKeyVisible && currentUser?.apiKey) {
+                display.textContent = currentUser.apiKey;
+            } else {
+                display.textContent = '••••••••••••••••';
+            }
+        }
+        
+        // Profile
+        function loadProfile() {
+            if (currentUser) {
+                document.getElementById('profileName').value = currentUser.name || '';
+                document.getElementById('profileEmail').value = currentUser.email || '';
+                document.getElementById('profilePhone').value = currentUser.phone || '';
+            }
+        }
+        
+        document.getElementById('profileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            try {
+                await api('/api/merchant/profile', {
+                    method: 'PATCH',
+                    body: JSON.stringify({
+                        name: document.getElementById('profileName').value,
+                        phone: document.getElementById('profilePhone').value
+                    })
+                });
+                
+                alert('Profile updated!');
+                currentUser.name = document.getElementById('profileName').value;
+                currentUser.phone = document.getElementById('profilePhone').value;
+                localStorage.setItem('currentMerchant', JSON.stringify(currentUser));
+            } catch (err) {
+                alert(err.message);
+            }
+        });
+        
+        // Helpers
+        function formatDate(date) {
+            if (!date) return '-';
+            const d = new Date(date);
+            return d.toLocaleString('en-US', { 
+                month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+            });
+        }
+        
+        function getLanguage() {
+            return localStorage.getItem('language') || 'pt';
+        }
+        
+        // Show App
+        function showApp() {
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('app').classList.remove('hidden');
+            
+            document.getElementById('apiEndpoint').textContent = `${API_BASE}/api/messages/send`;
+        }
+        
+        // Check Auth on Load
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('language') || 'pt';
+            setLanguage(savedLang);
+            
+            const token = getToken();
+            const savedUser = localStorage.getItem('currentMerchant');
+            
+            if (token && savedUser) {
+                currentUser = JSON.parse(savedUser);
+                showApp();
+                loadDashboard();
+            }
         });
     </script>
 </body>

@@ -22,11 +22,94 @@
             background: var(--bg);
             color: #333;
         }
+        .hidden { display: none !important; }
+        
+        /* Login Page */
+        .login-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--sidebar) 0%, var(--primary) 100%);
+        }
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .login-box h1 {
+            text-align: center;
+            margin-bottom: 8px;
+            color: var(--sidebar);
+        }
+        .login-box p {
+            text-align: center;
+            color: #666;
+            margin-bottom: 32px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+        .btn-block {
+            width: 100%;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .error-msg {
+            color: var(--error);
+            font-size: 14px;
+            margin-top: 8px;
+            text-align: center;
+        }
+        
+        /* Layout */
         .layout {
             display: flex;
             min-height: 100vh;
         }
-        /* Sidebar */
         .sidebar {
             width: 260px;
             background: var(--sidebar);
@@ -60,6 +143,10 @@
             transition: all 0.2s;
             text-decoration: none;
             color: rgba(255,255,255,0.8);
+            border: none;
+            background: none;
+            width: 100%;
+            font-size: 14px;
         }
         .nav-item:hover, .nav-item.active {
             background: rgba(255,255,255,0.1);
@@ -78,7 +165,6 @@
             opacity: 0.5;
             margin-top: 16px;
         }
-        /* Main Content */
         .main {
             flex: 1;
             margin-left: 260px;
@@ -106,21 +192,6 @@
             align-items: center;
             gap: 16px;
         }
-        .notification-btn {
-            position: relative;
-            padding: 8px;
-            cursor: pointer;
-        }
-        .notification-btn .badge {
-            position: absolute;
-            top: 4px;
-            right: 4px;
-            background: var(--error);
-            color: white;
-            font-size: 10px;
-            padding: 2px 6px;
-            border-radius: 10px;
-        }
         .user-menu {
             display: flex;
             align-items: center;
@@ -144,7 +215,6 @@
             color: white;
             font-weight: 600;
         }
-        /* Content */
         .content {
             padding: 24px;
         }
@@ -153,7 +223,6 @@
             font-weight: 600;
             margin-bottom: 24px;
         }
-        /* Stats Cards */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -186,7 +255,6 @@
         .stat-card .change.negative {
             color: var(--error);
         }
-        /* Cards */
         .card {
             background: white;
             border-radius: 12px;
@@ -207,7 +275,6 @@
         .card-body {
             padding: 20px;
         }
-        /* Table */
         .table-container {
             overflow-x: auto;
         }
@@ -237,45 +304,15 @@
             font-size: 12px;
             font-weight: 500;
         }
-        .status-badge.active {
-            background: #e8f5e9;
-            color: #2e7d32;
-        }
-        .status-badge.inactive {
-            background: #ffebee;
-            color: #c62828;
-        }
-        .status-badge.pending {
-            background: #fff3e0;
-            color: #ef6c00;
-        }
-        /* Buttons */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 500;
-            cursor: pointer;
-            border: none;
-            transition: all 0.2s;
-        }
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-        .btn-primary:hover {
-            background: var(--primary-dark);
-        }
+        .status-badge.active { background: #e8f5e9; color: #2e7d32; }
+        .status-badge.inactive { background: #ffebee; color: #c62828; }
+        .status-badge.pending { background: #fff3e0; color: #ef6c00; }
         .btn-secondary {
             background: white;
             color: #333;
             border: 1px solid #ddd;
         }
-        .btn-secondary:hover {
-            background: #f5f5f5;
-        }
+        .btn-secondary:hover { background: #f5f5f5; }
         .btn-icon {
             padding: 8px;
             background: transparent;
@@ -284,10 +321,7 @@
             border-radius: 8px;
             color: #666;
         }
-        .btn-icon:hover {
-            background: #f5f5f5;
-        }
-        /* Search */
+        .btn-icon:hover { background: #f5f5f5; }
         .search-box {
             display: flex;
             align-items: center;
@@ -303,99 +337,198 @@
             outline: none;
             font-size: 14px;
         }
-        /* Tabs */
-        .tabs {
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
             display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
         }
-        .tab {
-            padding: 8px 16px;
-            cursor: pointer;
-            border-radius: 8px;
-            font-size: 14px;
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-body {
+            padding: 20px;
+        }
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #fff;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
             color: #666;
         }
-        .tab.active {
-            background: var(--primary);
-            color: white;
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
         }
     </style>
 </head>
 <body>
-    <div class="layout">
-        <!-- Sidebar -->
+    <!-- Login Page -->
+    <div id="loginPage" class="login-page">
+        <div class="login-box">
+            <h1>🌐 全球SMS管理</h1>
+            <p>管理后台登录</p>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="email" placeholder="admin@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
+                <div id="loginError" class="error-msg hidden"></div>
+                <button type="submit" class="btn btn-primary btn-block" id="loginBtn">
+                    <span id="loginBtnText">登录</span>
+                </button>
+            </form>
+            <p style="margin-top: 20px; font-size: 12px;">
+                <a href="#" id="createAdminLink" style="color: var(--primary);">创建管理员账号</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Create Admin Modal -->
+    <div id="createAdminModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>创建管理员账号</h3>
+                <button class="btn-icon" onclick="closeModal('createAdminModal')">
+                    <i class="mdi mdi-close"></i>
+                </button>
+            </div>
+            <form id="createAdminForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>姓名</label>
+                        <input type="text" id="adminName" placeholder="管理员姓名" required>
+                    </div>
+                    <div class="form-group">
+                        <label>邮箱</label>
+                        <input type="email" id="adminEmail" placeholder="admin@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>密码</label>
+                        <input type="password" id="adminPassword" placeholder="至少6位密码" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('createAdminModal')">取消</button>
+                    <button type="submit" class="btn btn-primary">创建</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Recharge Modal -->
+    <div id="rechargeModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>商户充值</h3>
+                <button class="btn-icon" onclick="closeModal('rechargeModal')">
+                    <i class="mdi mdi-close"></i>
+                </button>
+            </div>
+            <form id="rechargeForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>商户</label>
+                        <input type="text" id="rechargeMerchantName" readonly>
+                        <input type="hidden" id="rechargeMerchantId">
+                    </div>
+                    <div class="form-group">
+                        <label>充值金额 (USD)</label>
+                        <input type="number" id="rechargeAmount" placeholder="0.00" step="0.01" min="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>备注</label>
+                        <input type="text" id="rechargeDesc" placeholder="充值说明">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('rechargeModal')">取消</button>
+                    <button type="submit" class="btn btn-primary">确认充值</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="app" class="layout hidden">
         <aside class="sidebar">
             <div class="sidebar-header">
                 <h1>🌐 全球SMS管理</h1>
                 <p>管理后台</p>
             </div>
             <nav class="nav-menu">
-                <a href="#" class="nav-item active">
+                <button class="nav-item active" data-page="dashboard">
                     <i class="mdi mdi-view-dashboard"></i>
                     总览
-                </a>
+                </button>
                 
                 <div class="nav-section">商户管理</div>
-                <a href="#" class="nav-item">
+                <button class="nav-item" data-page="merchants">
                     <i class="mdi mdi-account-group"></i>
                     商户列表
-                </a>
-                <a href="#" class="nav-item">
-                    <i class="mdi mdi-account-plus"></i>
-                    新增商户
-                </a>
-                <a href="#" class="nav-item">
+                </button>
+                <button class="nav-item" data-page="transactions">
                     <i class="mdi mdi-cash-multiple"></i>
-                    充值管理
-                </a>
-                
-                <div class="nav-section">通道管理</div>
-                <a href="#" class="nav-item">
-                    <i class="mdi mdi-swap-horizontal"></i>
-                    通道配置
-                </a>
-                <a href="#" class="nav-item">
-                    <i class="mdi mdi-chart-line"></i>
-                    通道监控
-                </a>
-                <a href="#" class="nav-item">
-                    <i class="mdi mdi-tag-multiple"></i>
-                    价格体系
-                </a>
+                    交易记录
+                </button>
                 
                 <div class="nav-section">系统</div>
-                <a href="#" class="nav-item">
-                    <i class="mdi mdi-file-document"></i>
-                    审计日志
-                </a>
-                <a href="#" class="nav-item">
-                    <i class="mdi mdi-cog"></i>
-                    系统设置
-                </a>
-                <a href="#" class="nav-item">
-                    <i class="mdi mdi-shield-account"></i>
-                    管理员账号
-                </a>
+                <button class="nav-item" onclick="logout()">
+                    <i class="mdi mdi-logout"></i>
+                    退出登录
+                </button>
             </nav>
         </aside>
         
-        <!-- Main Content -->
         <main class="main">
             <header class="header">
                 <div class="breadcrumb">
-                    首页 > <strong>总览</strong>
+                    <span id="pageBreadcrumb">首页 > <strong>总览</strong></span>
                 </div>
                 <div class="header-actions">
-                    <div class="notification-btn">
-                        <i class="mdi mdi-bell-outline" style="font-size: 20px;"></i>
-                        <span class="badge">3</span>
-                    </div>
-                    <div class="user-menu">
-                        <div class="avatar">A</div>
+                    <div class="user-menu" onclick="logout()">
+                        <div class="avatar" id="userAvatar">A</div>
                         <div>
-                            <div style="font-weight: 600; font-size: 14px;">超级管理员</div>
-                            <div style="font-size: 12px; color: #666;">admin@sms.com</div>
+                            <div style="font-weight: 600; font-size: 14px;" id="userName">管理员</div>
+                            <div style="font-size: 12px; color: #666;" id="userEmail">admin@sms.com</div>
                         </div>
                         <i class="mdi mdi-chevron-down"></i>
                     </div>
@@ -403,180 +536,477 @@
             </header>
             
             <div class="content">
-                <h1 class="page-title">系统总览</h1>
-                
-                <!-- Stats -->
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="label">活跃商户</div>
-                        <div class="value">128</div>
-                        <div class="change positive">↑ 12% 较上月</div>
+                <!-- Dashboard Page -->
+                <div id="page-dashboard">
+                    <h1 class="page-title">系统总览</h1>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="label">活跃商户</div>
+                            <div class="value" id="stat-merchants">0</div>
+                            <div class="change positive">系统商户总数</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="label">今日发送量</div>
+                            <div class="value" id="stat-messages">0</div>
+                            <div class="change positive">今日短信发送</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="label">系统余额</div>
+                            <div class="value" id="stat-balance">$0.00</div>
+                            <div class="change positive">所有商户余额总和</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="label">待审核商户</div>
+                            <div class="value" id="stat-pending" style="color: var(--warning);">0</div>
+                            <div class="change positive">需要激活</div>
+                        </div>
                     </div>
                     
-                    <div class="stat-card">
-                        <div class="label">今日发送量</div>
-                        <div class="value">1.2M</div>
-                        <div class="change positive">↑ 8% 较昨日</div>
-                    </div>
-                    
-                    <div class="stat-card">
-                        <div class="label">系统余额</div>
-                        <div class="value">$45.2K</div>
-                        <div class="change positive">↑ $3.2K 今日充值</div>
-                    </div>
-                    
-                    <div class="stat-card">
-                        <div class="label">通道健康度</div>
-                        <div class="value" style="color: var(--success);">98.5%</div>
-                        <div class="change positive">12/13 通道正常</div>
-                    </div>
-                </div>
-                
-                <!-- Recent Merchants -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">最近注册商户</div>
-                        <div style="display: flex; gap: 12px;">
-                            <div class="search-box">
-                                <i class="mdi mdi-magnify"></i>
-                                <input type="text" placeholder="搜索商户...">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">最近注册商户</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>商户名称</th>
+                                            <th>邮箱</th>
+                                            <th>余额</th>
+                                            <th>状态</th>
+                                            <th>注册时间</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recentMerchantsTable"></tbody>
+                                </table>
                             </div>
-                            <button class="btn btn-primary">
-                                <i class="mdi mdi-plus"></i>
-                                新增商户
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="card-body">
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>商户ID</th>
-                                        <th>名称</th>
-                                        <th>邮箱</th>
-                                        <th>余额</th>
-                                        <th>状态</th>
-                                        <th>注册时间</th>
-                                        <th>操作</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>#M00128</td>
-                                        <td>ABC跨境电商</td>
-                                        <td>admin@abc.com</td>
-                                        <td>$5,230.00</td>
-                                        <td><span class="status-badge active">正常</span></td>
-                                        <td>2025-02-03 14:30</td>
-                                        <td>
-                                            <button class="btn-icon"><i class="mdi mdi-pencil"></i></button>
-                                            <button class="btn-icon"><i class="mdi mdi-eye"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>#M00127</td>
-                                        <td>XYZ游戏</td>
-                                        <td>ops@xyzgame.com</td>
-                                        <td>$12,450.00</td>
-                                        <td><span class="status-badge active">正常</span></td>
-                                        <td>2025-02-03 12:15</td>
-                                        <td>
-                                            <button class="btn-icon"><i class="mdi mdi-pencil"></i></button>
-                                            <button class="btn-icon"><i class="mdi mdi-eye"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>#M00126</td>
-                                        <td>Global Pay</td>
-                                        <td>support@globalpay.io</td>
-                                        <td>$890.00</td>
-                                        <td><span class="status-badge pending">待审核</span></td>
-                                        <td>2025-02-03 10:45</td>
-                                        <td>
-                                            <button class="btn-icon"><i class="mdi mdi-pencil"></i></button>
-                                            <button class="btn-icon"><i class="mdi mdi-eye"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>#M00125</td>
-                                        <td>速达物流</td>
-                                        <td>logistics@suda.cn</td>
-                                        <td>$320.00</td>
-                                        <td><span class="status-badge inactive">暂停</span></td>
-                                        <td>2025-02-02 18:20</td>
-                                        <td>
-                                            <button class="btn-icon"><i class="mdi mdi-pencil"></i></button>
-                                            <button class="btn-icon"><i class="mdi mdi-eye"></i></button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Channel Status -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">通道状态</div>
-                        <button class="btn btn-secondary">查看全部</button>
+
+                <!-- Merchants Page -->
+                <div id="page-merchants" class="hidden">
+                    <h1 class="page-title">商户列表</h1>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">全部商户</div>
+                            <div style="display: flex; gap: 12px;">
+                                <div class="search-box">
+                                    <i class="mdi mdi-magnify"></i>
+                                    <input type="text" id="merchantSearch" placeholder="搜索商户...">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>商户名称</th>
+                                            <th>邮箱</th>
+                                            <th>余额</th>
+                                            <th>状态</th>
+                                            <th>注册时间</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="merchantsTable"></tbody>
+                                </table>
+                            </div>
+                            <div id="merchantsEmpty" class="empty-state hidden">
+                                <i class="mdi mdi-account-off"></i>
+                                <p>暂无商户数据</p>
+                            </div>
+                        </div>
                     </div>
-                    
-                    <div class="card-body">
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>通道名称</th>
-                                        <th>服务商</th>
-                                        <th>类型</th>
-                                        <th>成功率</th>
-                                        <th>平均延迟</th>
-                                        <th>状态</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Twilio-US</td>
-                                        <td>Twilio</td>
-                                        <td>SMS</td>
-                                        <td>99.2%</td>
-                                        <td>320ms</td>
-                                        <td><span class="status-badge active">正常</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Zenvia-BR</td>
-                                        <td>Zenvia</td>
-                                        <td>SMS</td>
-                                        <td>98.7%</td>
-                                        <td>450ms</td>
-                                        <td><span class="status-badge active">正常</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Vonage-EU</td>
-                                        <td>Vonage</td>
-                                        <td>SMS</td>
-                                        <td>97.5%</td>
-                                        <td>520ms</td>
-                                        <td><span class="status-badge active">正常</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>MessageBird-RCS</td>
-                                        <td>MessageBird</td>
-                                        <td>RCS</td>
-                                        <td>89.3%</td>
-                                        <td>680ms</td>
-                                        <td><span class="status-badge pending">降级</span></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                </div>
+
+                <!-- Transactions Page -->
+                <div id="page-transactions" class="hidden">
+                    <h1 class="page-title">交易记录</h1>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">全部交易</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>时间</th>
+                                            <th>商户</th>
+                                            <th>类型</th>
+                                            <th>金额</th>
+                                            <th>余额</th>
+                                            <th>说明</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="transactionsTable"></tbody>
+                                </table>
+                            </div>
+                            <div id="transactionsEmpty" class="empty-state hidden">
+                                <i class="mdi mdi-cash-remove"></i>
+                                <p>暂无交易记录</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </main>
     </div>
+
+    <script>
+        // API Base URL - 修改为你的后端地址
+        const API_BASE = localStorage.getItem('apiBase') || 'http://localhost:3001';
+        
+        // State
+        let currentUser = null;
+        let merchants = [];
+        let transactions = [];
+        
+        // Auth Token
+        function getToken() {
+            return localStorage.getItem('adminToken');
+        }
+        
+        function setToken(token) {
+            localStorage.setItem('adminToken', token);
+        }
+        
+        function clearToken() {
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('currentUser');
+        }
+        
+        // API Helper
+        async function api(url, options = {}) {
+            const token = getToken();
+            const res = await fetch(`${API_BASE}${url}`, {
+                ...options,
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(token && { 'Authorization': `Bearer ${token}` }),
+                    ...options.headers
+                }
+            });
+            
+            if (res.status === 401) {
+                logout();
+                return;
+            }
+            
+            const data = await res.json().catch(() => null);
+            
+            if (!res.ok) {
+                throw new Error(data?.error || '请求失败');
+            }
+            
+            return data;
+        }
+        
+        // Login
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('loginBtn');
+            const btnText = document.getElementById('loginBtnText');
+            const errorDiv = document.getElementById('loginError');
+            
+            btn.disabled = true;
+            btnText.innerHTML = '<span class="loading"></span>';
+            errorDiv.classList.add('hidden');
+            
+            try {
+                const data = await api('/api/auth/admin/login', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        email: document.getElementById('email').value,
+                        password: document.getElementById('password').value
+                    })
+                });
+                
+                setToken(data.token);
+                currentUser = data.admin;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                
+                showApp();
+                loadDashboard();
+            } catch (err) {
+                errorDiv.textContent = err.message;
+                errorDiv.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btnText.textContent = '登录';
+            }
+        });
+        
+        // Create Admin
+        document.getElementById('createAdminLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('createAdminModal').classList.remove('hidden');
+        });
+        
+        document.getElementById('createAdminForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            try {
+                await api('/api/auth/register', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        name: document.getElementById('adminName').value,
+                        email: document.getElementById('adminEmail').value,
+                        password: document.getElementById('adminPassword').value
+                    })
+                });
+                
+                alert('管理员创建成功！请使用新账号登录。');
+                closeModal('createAdminModal');
+            } catch (err) {
+                alert(err.message);
+            }
+        });
+        
+        // Logout
+        function logout() {
+            clearToken();
+            location.reload();
+        }
+        
+        // Navigation
+        document.querySelectorAll('.nav-item[data-page]').forEach(item => {
+            item.addEventListener('click', () => {
+                const page = item.dataset.page;
+                showPage(page);
+                
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+        
+        function showPage(page) {
+            document.querySelectorAll('[id^="page-"]').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`page-${page}`).classList.remove('hidden');
+            
+            const titles = {
+                dashboard: '首页 > <strong>总览</strong>',
+                merchants: '商户管理 > <strong>商户列表</strong>',
+                transactions: '财务 > <strong>交易记录</strong>'
+            };
+            document.getElementById('pageBreadcrumb').innerHTML = titles[page];
+            
+            if (page === 'merchants') loadMerchants();
+            if (page === 'transactions') loadTransactions();
+        }
+        
+        // Modal
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+        
+        // Load Dashboard
+        async function loadDashboard() {
+            try {
+                const data = await api('/api/admin/merchants?limit=5');
+                merchants = data.merchants || [];
+                
+                const pending = merchants.filter(m => m.status === 'pending').length;
+                const totalBalance = merchants.reduce((sum, m) => sum + parseFloat(m.balance || 0), 0);
+                
+                document.getElementById('stat-merchants').textContent = data.pagination?.total || 0;
+                document.getElementById('stat-pending').textContent = pending;
+                document.getElementById('stat-balance').textContent = '$' + totalBalance.toFixed(2);
+                
+                const tbody = document.getElementById('recentMerchantsTable');
+                tbody.innerHTML = merchants.slice(0, 5).map(m => `
+                    <tr>
+                        <td>${m.name}</td>
+                        <td>${m.email}</td>
+                        <td>$${parseFloat(m.balance || 0).toFixed(2)}</td>
+                        <td><span class="status-badge ${m.status}">${getStatusText(m.status)}</span></td>
+                        <td>${formatDate(m.createdAt)}</td>
+                    </tr>
+                `).join('');
+            } catch (err) {
+                console.error('Load dashboard error:', err);
+            }
+        }
+        
+        // Load Merchants
+        async function loadMerchants() {
+            try {
+                const data = await api('/api/admin/merchants?limit=100');
+                merchants = data.merchants || [];
+                renderMerchants();
+            } catch (err) {
+                console.error('Load merchants error:', err);
+            }
+        }
+        
+        function renderMerchants() {
+            const search = document.getElementById('merchantSearch').value.toLowerCase();
+            const filtered = merchants.filter(m => 
+                m.name.toLowerCase().includes(search) ||
+                m.email.toLowerCase().includes(search)
+            );
+            
+            const tbody = document.getElementById('merchantsTable');
+            const empty = document.getElementById('merchantsEmpty');
+            
+            if (filtered.length === 0) {
+                tbody.innerHTML = '';
+                empty.classList.remove('hidden');
+                return;
+            }
+            
+            empty.classList.add('hidden');
+            tbody.innerHTML = filtered.map(m => `
+                <tr>
+                    <td>${m.name}</td>
+                    <td>${m.email}</td>
+                    <td>$${parseFloat(m.balance || 0).toFixed(2)}</td>
+                    <td><span class="status-badge ${m.status}">${getStatusText(m.status)}</span></td>
+                    <td>${formatDate(m.createdAt)}</td>
+                    <td>
+                        ${m.status === 'pending' ? `
+                            <button class="btn-icon" onclick="updateStatus('${m.id}', 'active')" title="激活">
+                                <i class="mdi mdi-check-circle" style="color: var(--success);"></i>
+                            </button>
+                        ` : ''}
+                        <button class="btn-icon" onclick="openRecharge('${m.id}', '${m.name}')" title="充值">
+                            <i class="mdi mdi-cash-plus" style="color: var(--primary);"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        document.getElementById('merchantSearch').addEventListener('input', renderMerchants);
+        
+        // Update Status
+        async function updateStatus(id, status) {
+            if (!confirm(`确定要${status === 'active' ? '激活' : '更改'}该商户吗？`)) return;
+            
+            try {
+                await api(`/api/admin/merchants/${id}/status`, {
+                    method: 'PATCH',
+                    body: JSON.stringify({ status })
+                });
+                loadMerchants();
+                loadDashboard();
+            } catch (err) {
+                alert(err.message);
+            }
+        }
+        
+        // Recharge
+        function openRecharge(id, name) {
+            document.getElementById('rechargeMerchantId').value = id;
+            document.getElementById('rechargeMerchantName').value = name;
+            document.getElementById('rechargeAmount').value = '';
+            document.getElementById('rechargeDesc').value = '';
+            document.getElementById('rechargeModal').classList.remove('hidden');
+        }
+        
+        document.getElementById('rechargeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const id = document.getElementById('rechargeMerchantId').value;
+            const amount = parseFloat(document.getElementById('rechargeAmount').value);
+            
+            try {
+                await api(`/api/admin/merchants/${id}/recharge`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        amount,
+                        description: document.getElementById('rechargeDesc').value
+                    })
+                });
+                
+                closeModal('rechargeModal');
+                loadMerchants();
+                loadDashboard();
+                alert('充值成功！');
+            } catch (err) {
+                alert(err.message);
+            }
+        });
+        
+        // Load Transactions
+        async function loadTransactions() {
+            try {
+                const data = await api('/api/admin/transactions?limit=50');
+                transactions = data.transactions || [];
+                
+                const tbody = document.getElementById('transactionsTable');
+                const empty = document.getElementById('transactionsEmpty');
+                
+                if (transactions.length === 0) {
+                    tbody.innerHTML = '';
+                    empty.classList.remove('hidden');
+                    return;
+                }
+                
+                empty.classList.add('hidden');
+                tbody.innerHTML = transactions.map(t => `
+                    <tr>
+                        <td>${formatDate(t.createdAt)}</td>
+                        <td>${t.Merchant?.name || '-'}</td>
+                        <td>${getTransactionType(t.type)}</td>
+                        <td style="color: ${t.amount > 0 ? 'var(--success)' : 'var(--error)'}">
+                            ${t.amount > 0 ? '+' : ''}$${Math.abs(t.amount).toFixed(2)}
+                        </td>
+                        <td>$${parseFloat(t.balanceAfter || 0).toFixed(2)}</td>
+                        <td>${t.description || '-'}</td>
+                    </tr>
+                `).join('');
+            } catch (err) {
+                console.error('Load transactions error:', err);
+            }
+        }
+        
+        // Helpers
+        function getStatusText(status) {
+            const map = { active: '正常', pending: '待审核', suspended: '已暂停', inactive: '未激活' };
+            return map[status] || status;
+        }
+        
+        function getTransactionType(type) {
+            const map = { recharge: '充值', deduction: '扣款', refund: '退款', adjustment: '调整' };
+            return map[type] || type;
+        }
+        
+        function formatDate(date) {
+            if (!date) return '-';
+            const d = new Date(date);
+            return d.toLocaleString('zh-CN', { 
+                year: 'numeric', month: '2-digit', day: '2-digit',
+                hour: '2-digit', minute: '2-digit'
+            });
+        }
+        
+        // Show App
+        function showApp() {
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('app').classList.remove('hidden');
+            
+            if (currentUser) {
+                document.getElementById('userName').textContent = currentUser.name;
+                document.getElementById('userEmail').textContent = currentUser.email;
+                document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+            }
+        }
+        
+        // Check Auth on Load
+        window.addEventListener('DOMContentLoaded', () => {
+            const token = getToken();
+            const savedUser = localStorage.getItem('currentUser');
+            
+            if (token && savedUser) {
+                currentUser = JSON.parse(savedUser);
+                showApp();
+                loadDashboard();
+            }
+        });
+    </script>
 </body>
 </html>
