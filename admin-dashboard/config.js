@@ -11,7 +11,7 @@ const API_CONFIG = {
 };
 
 // 当前使用的环境
-const CURRENT_ENV = 'development'; // 部署后改成 'production'
+const CURRENT_ENV = 'production'; // 部署后改成 'production'
 
 // 获取 API 基础地址
 function getApiBase() {
