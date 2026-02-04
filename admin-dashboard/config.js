@@ -2,7 +2,7 @@
 // 修改下面的地址为你的后端 API 地址
 const API_CONFIG = {
     // 开发环境（本地测试）
-    development: 'https://smsplatform.loca.lt',
+    development: 'https://sour-deer-52.loca.lt',
     
     // 生产环境（部署后）
     // 部署到 Render 后，把这里改成你的 Render 地址，例如：
