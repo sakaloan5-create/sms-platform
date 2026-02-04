@@ -9,6 +9,7 @@ const geoip = require('geoip-lite');
 
 const { sequelize } = require('./models');
 const logger = require('./utils/logger');
+const { initAdmin } = require('./utils/init');
 const authRoutes = require('./routes/auth.routes');
 const merchantRoutes = require('./routes/merchant.routes');
 const adminRoutes = require('./routes/admin.routes');
@@ -102,6 +103,9 @@ async function startServer() {
     
     await sequelize.sync({ alter: process.env.NODE_ENV === 'development' });
     logger.info('Database models synchronized.');
+    
+    // 初始化默认管理员
+    await initAdmin();
     
     app.listen(PORT, () => {
       logger.info(`Server running on port ${PORT}`);
