@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs');
-const { Merchant } = require('./models');
+const { Merchant } = require('../models');
 
 async function initAdmin() {
   try {
