@@ -1,71 +1,71 @@
 const express = require('express');
-const { Message, Transaction, Merchant } = require('../models');
-const { Op } = require('sequelize');
+const { Message, Template, Blacklist } = require('../models');
+const { sendMessage, sendBulkMessages, getMessageHistory, getMessageStatus } = require('../services/message.service');
 const logger = require('../utils/logger');
 
 const router = express.Router();
 
+// Check blacklist
+async function checkBlacklist(merchantId, phone, content) {
+  // Check phone
+  const phoneBlacklisted = await Blacklist.findOne({
+    where: [{ type: 'global', phone }, { type: 'merchant', merchantId, phone }]
+  });
+  if (phoneBlacklisted) return { blocked: true, reason: 'Phone blacklisted' };
+  
+  // Check words
+  const blacklistedWords = await Blacklist.findAll({
+    where: [{ type: 'global', word: { [require('sequelize').Op.ne]: null } }, 
+            { type: 'merchant', merchantId, word: { [require('sequelize').Op.ne]: null } }],
+    attributes: ['word']
+  });
+  
+  for (const entry of blacklistedWords) {
+    if (content.toLowerCase().includes(entry.word.toLowerCase())) {
+      return { blocked: true, reason: `Contains blocked word: ${entry.word}` };
+    }
+  }
+  
+  return { blocked: false };
+}
+
 // Send single message
 router.post('/send', async (req, res, next) => {
   try {
-    const { to, content, type = 'SMS', callbackUrl } = req.body;
+    const { to, content, type = 'sms', callbackUrl, templateId, variables } = req.body;
     
-    // Calculate segments and cost
-    const isUnicode = /[^\x00-\x7F]/.test(content);
-    const maxLength = isUnicode ? 70 : 160;
-    const segments = Math.ceil(content.length / maxLength);
+    let finalContent = content;
     
-    // Get price (simplified - should lookup from channel pricing)
-    const pricePerSegment = 0.05; // $0.05 per segment
-    const totalCost = segments * pricePerSegment;
-
-    // Check balance
-    const merchant = req.user;
-    const available = parseFloat(merchant.balance) + parseFloat(merchant.creditLimit);
-    if (available < totalCost) {
-      return res.status(402).json({ error: 'Insufficient balance' });
+    // If using template
+    if (templateId) {
+      const template = await Template.findOne({
+        where: { id: templateId, merchantId: req.user.id, isActive: true }
+      });
+      if (!template) return res.status(404).json({ error: 'Template not found' });
+      
+      finalContent = template.content;
+      if (variables) {
+        Object.keys(variables).forEach(key => {
+          finalContent = finalContent.replace(new RegExp(`{{${key}}}`, 'g'), variables[key]);
+        });
+      }
     }
-
-    // Create message record
-    const message = await Message.create({
-      merchantId: merchant.id,
-      to,
-      content,
-      type,
-      segments,
-      cost: totalCost,
-      status: 'pending',
+    
+    // Check blacklist
+    const blacklistCheck = await checkBlacklist(req.user.id, to, finalContent);
+    if (blacklistCheck.blocked) {
+      return res.status(403).json({ error: blacklistCheck.reason });
+    }
+    
+    const result = await sendMessage(req.user.id, {
+      phoneNumber: to,
+      content: finalContent,
+      messageType: type.toLowerCase(),
       callbackUrl
     });
-
-    // Deduct balance
-    const newBalance = parseFloat(merchant.balance) - totalCost;
-    await merchant.update({ balance: newBalance });
-
-    // Create transaction
-    await Transaction.create({
-      merchantId: merchant.id,
-      type: 'debit',
-      amount: -totalCost,
-      balance: newBalance,
-      description: `SMS to ${to}`,
-      referenceId: message.id,
-      status: 'completed'
-    });
-
-    // TODO: Actually send via SMS provider
-    // For now, simulate sending
-    setTimeout(async () => {
-      await message.update({ status: 'delivered', deliveredAt: new Date() });
-    }, 1000);
-
-    logger.info(`Message sent by ${merchant.id} to ${to}`);
-    res.json({
-      message: 'Message queued',
-      messageId: message.id,
-      segments,
-      cost: totalCost
-    });
+    
+    logger.info(`Message sent by ${req.user.id} to ${to}`);
+    res.json(result);
   } catch (error) {
     next(error);
   }
@@ -74,58 +74,57 @@ router.post('/send', async (req, res, next) => {
 // Send bulk messages
 router.post('/bulk', async (req, res, next) => {
   try {
-    const { recipients, content, type = 'SMS' } = req.body;
+    const { recipients, content, type = 'sms', templateId, variables, callbackUrl } = req.body;
     
-    // Calculate total cost
-    const isUnicode = /[^\x00-\x7F]/.test(content);
-    const maxLength = isUnicode ? 70 : 160;
-    const segmentsPerMessage = Math.ceil(content.length / maxLength);
-    const pricePerSegment = 0.05;
-    const totalCost = recipients.length * segmentsPerMessage * pricePerSegment;
-
-    // Check balance
-    const merchant = req.user;
-    const available = parseFloat(merchant.balance) + parseFloat(merchant.creditLimit);
-    if (available < totalCost) {
-      return res.status(402).json({ error: 'Insufficient balance' });
+    if (!Array.isArray(recipients) || recipients.length === 0) {
+      return res.status(400).json({ error: 'Recipients array required' });
     }
-
-    // Create messages
-    const messages = await Promise.all(
-      recipients.map(to =>
-        Message.create({
-          merchantId: merchant.id,
-          to,
-          content,
-          type,
-          segments: segmentsPerMessage,
-          cost: segmentsPerMessage * pricePerSegment,
-          status: 'pending'
-        })
-      )
-    );
-
-    // Deduct balance
-    const newBalance = parseFloat(merchant.balance) - totalCost;
-    await merchant.update({ balance: newBalance });
-
-    // Create transaction
-    await Transaction.create({
-      merchantId: merchant.id,
-      type: 'debit',
-      amount: -totalCost,
-      balance: newBalance,
-      description: `Bulk SMS to ${recipients.length} recipients`,
-      status: 'completed'
+    
+    if (recipients.length > 10000) {
+      return res.status(400).json({ error: 'Maximum 10,000 recipients per batch' });
+    }
+    
+    let finalContent = content;
+    
+    // If using template
+    if (templateId) {
+      const template = await Template.findOne({
+        where: { id: templateId, merchantId: req.user.id, isActive: true }
+      });
+      if (!template) return res.status(404).json({ error: 'Template not found' });
+      
+      finalContent = template.content;
+      if (variables) {
+        Object.keys(variables).forEach(key => {
+          finalContent = finalContent.replace(new RegExp(`{{${key}}}`, 'g'), variables[key]);
+        });
+      }
+    }
+    
+    // Check blacklist for all recipients
+    const validRecipients = [];
+    const blockedRecipients = [];
+    
+    for (const phone of recipients) {
+      const check = await checkBlacklist(req.user.id, phone, finalContent);
+      if (check.blocked) {
+        blockedRecipients.push({ phone, reason: check.reason });
+      } else {
+        validRecipients.push(phone);
+      }
+    }
+    
+    const result = await sendBulkMessages(req.user.id, {
+      recipients: validRecipients,
+      content: finalContent,
+      messageType: type.toLowerCase(),
+      callbackUrl
     });
-
-    logger.info(`Bulk messages sent by ${merchant.id}, count: ${recipients.length}`);
-    res.json({
-      message: 'Bulk messages queued',
-      count: recipients.length,
-      totalCost,
-      messageIds: messages.map(m => m.id)
-    });
+    
+    result.blockedRecipients = blockedRecipients;
+    
+    logger.info(`Bulk messages sent by ${req.user.id}, count: ${validRecipients.length}`);
+    res.json(result);
   } catch (error) {
     next(error);
   }
@@ -134,23 +133,8 @@ router.post('/bulk', async (req, res, next) => {
 // Get message status
 router.get('/:id/status', async (req, res, next) => {
   try {
-    const message = await Message.findOne({
-      where: { id: req.params.id, merchantId: req.user.id }
-    });
-    
-    if (!message) {
-      return res.status(404).json({ error: 'Message not found' });
-    }
-
-    res.json({
-      id: message.id,
-      status: message.status,
-      sentAt: message.sentAt,
-      deliveredAt: message.deliveredAt,
-      failedAt: message.failedAt,
-      errorCode: message.errorCode,
-      errorMessage: message.errorMessage
-    });
+    const status = await getMessageStatus(req.params.id, req.user.id);
+    res.json(status);
   } catch (error) {
     next(error);
   }
@@ -159,27 +143,11 @@ router.get('/:id/status', async (req, res, next) => {
 // Get message history
 router.get('/', async (req, res, next) => {
   try {
-    const { page = 1, limit = 20, status } = req.query;
-    const offset = (page - 1) * limit;
-    
-    const where = { merchantId: req.user.id };
-    if (status) where.status = status;
-
-    const { count, rows } = await Message.findAndCountAll({
-      where,
-      order: [['createdAt', 'DESC']],
-      limit: parseInt(limit),
-      offset: parseInt(offset)
+    const { page = 1, limit = 20, status, startDate, endDate, phone } = req.query;
+    const result = await getMessageHistory(req.user.id, {
+      page, limit, status, startDate, endDate, phoneNumber: phone
     });
-
-    res.json({
-      messages: rows,
-      pagination: {
-        total: count,
-        page: parseInt(page),
-        pages: Math.ceil(count / limit)
-      }
-    });
+    res.json(result);
   } catch (error) {
     next(error);
   }

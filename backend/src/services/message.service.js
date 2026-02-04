@@ -1,6 +1,9 @@
-const { Message, Channel, Merchant, MerchantChannel } = require('../models');
+const { Message, Channel, Merchant } = require('../models');
+const { Op } = require('sequelize');
 const { calculateMessageCost, deductBalance } = require('./billing.service');
 const { selectBestChannel } = require('./channel.service');
+const { broadcastMessageStatus, broadcastBalanceUpdate } = require('./websocket.service');
+const { TwilioProvider } = require('../providers/twilio.provider');
 const { v4: uuidv4 } = require('uuid');
 
 // Send single message
@@ -104,44 +107,98 @@ const sendBulkMessages = async (merchantId, data) => {
   return results;
 };
 
-// Send via provider (mock implementation)
+// Send via provider
 const sendViaProvider = async (message, channel) => {
-  // Update status to sent
+  try {
+    let provider;
+    const config = channel.config || {};
+    
+    // Initialize appropriate provider
+    switch (channel.provider) {
+      case 'twilio':
+        provider = new TwilioProvider(config);
+        break;
+      default:
+        // Fallback to mock for unsupported providers
+        console.warn(`Provider ${channel.provider} not implemented, using mock`);
+        await mockSend(message);
+        return;
+    }
+    
+    // Update status to sent
+    await message.update({ 
+      status: 'sent',
+      sentAt: new Date()
+    });
+    
+    // Broadcast status update
+    broadcastMessageStatus(message.merchantId, message.id, 'sent');
+    
+    // Send via provider
+    const result = await provider.sendMessage(
+      message.phoneNumber,
+      message.content,
+      { statusCallback: config.webhookUrl }
+    );
+    
+    if (result.success) {
+      await message.update({ externalId: result.externalId });
+      
+      // If synchronous delivery confirmation
+      if (result.status === 'delivered') {
+        await message.update({ 
+          status: 'delivered',
+          deliveredAt: new Date()
+        });
+        broadcastMessageStatus(message.merchantId, message.id, 'delivered');
+      }
+    } else {
+      await message.update({ 
+        status: 'failed',
+        errorCode: result.code,
+        errorMessage: result.error
+      });
+      broadcastMessageStatus(message.merchantId, message.id, 'failed', {
+        error: result.error
+      });
+      
+      // Refund on failure
+      const merchant = await Merchant.findByPk(message.merchantId);
+      const newBalance = parseFloat(merchant.balance) + parseFloat(message.cost);
+      await merchant.update({ balance: newBalance });
+      broadcastBalanceUpdate(message.merchantId, newBalance);
+    }
+    
+  } catch (error) {
+    console.error('Send via provider failed:', error);
+    await message.update({ 
+      status: 'failed',
+      errorCode: 'PROVIDER_ERROR',
+      errorMessage: error.message
+    });
+    broadcastMessageStatus(message.merchantId, message.id, 'failed', {
+      error: error.message
+    });
+  }
+};
+
+// Mock send for testing
+const mockSend = async (message) => {
   await message.update({ 
     status: 'sent',
-    sentAt: new Date()
+    sentAt: new Date(),
+    externalId: `mock_${Date.now()}`
   });
   
-  // Mock provider integration - replace with actual provider SDK
-  const providerResponses = {
-    twilio: async (msg, ch) => {
-      // Twilio SDK implementation
-      return { id: `twilio_${Date.now()}`, status: 'sent' };
-    },
-    vonage: async (msg, ch) => {
-      // Vonage SDK implementation
-      return { id: `vonage_${Date.now()}`, status: 'sent' };
-    },
-    zenvia: async (msg, ch) => {
-      // Zenvia SDK implementation
-      return { id: `zenvia_${Date.now()}`, status: 'sent' };
-    }
-  };
+  broadcastMessageStatus(message.merchantId, message.id, 'sent');
   
-  const provider = providerResponses[channel.provider];
-  if (provider) {
-    const response = await provider(message, channel);
-    await message.update({ externalId: response.id });
-  }
-  
-  // Simulate delivery (in production, this would be via webhook)
   setTimeout(async () => {
     await message.update({ 
       status: 'delivered',
       deliveredAt: new Date()
     });
+    broadcastMessageStatus(message.merchantId, message.id, 'delivered');
     
-    // Send callback if configured
     if (message.callbackUrl) {
       sendCallback(message.callbackUrl, {
         messageId: message.id,
@@ -247,9 +304,21 @@ const handleProviderWebhook = async (provider, data) => {
   } else if (status === 'failed') {
     updateData.errorCode = errorCode;
     updateData.errorMessage = errorMessage;
+    
+    // Refund on failure
+    const merchant = await Merchant.findByPk(message.merchantId);
+    const newBalance = parseFloat(merchant.balance) + parseFloat(message.cost);
+    await merchant.update({ balance: newBalance });
+    broadcastBalanceUpdate(message.merchantId, newBalance);
   }
   
   await message.update(updateData);
+  
+  // Broadcast via WebSocket
+  broadcastMessageStatus(message.merchantId, message.id, status, {
+    errorCode,
+    errorMessage
+  });
   
   // Send callback if configured
   if (message.callbackUrl) {

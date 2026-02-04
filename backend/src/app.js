@@ -6,15 +6,26 @@ const rateLimit = require('express-rate-limit');
 const i18next = require('i18next');
 const i18nextHttpMiddleware = require('i18next-http-middleware');
 const geoip = require('geoip-lite');
+const http = require('http');
+const { Server } = require('socket.io');
 
-const { sequelize } = require('./models');
+const { sequelize, Merchant } = require('./models');
 const logger = require('./utils/logger');
 const { initAdmin } = require('./utils/init');
+const { initWebSocket } = require('./services/websocket.service');
+const { startScheduler } = require('./services/scheduler.service');
 const authRoutes = require('./routes/auth.routes');
 const merchantRoutes = require('./routes/merchant.routes');
 const adminRoutes = require('./routes/admin.routes');
 const messageRoutes = require('./routes/message.routes');
 const channelRoutes = require('./routes/channel.routes');
+const templateRoutes = require('./routes/template.routes');
+const apiKeyRoutes = require('./routes/apikey.routes');
+const subaccountRoutes = require('./routes/subaccount.routes');
+const reportRoutes = require('./routes/report.routes');
+const scheduledRoutes = require('./routes/scheduled.routes');
+const blacklistRoutes = require('./routes/blacklist.routes');
+const webhookRoutes = require('./routes/webhook.routes');
 const { errorHandler } = require('./middleware/error.middleware');
 const { authenticate } = require('./middleware/auth.middleware');
 
@@ -86,6 +97,13 @@ app.use('/api/merchant', authenticate, merchantRoutes);
 app.use('/api/admin', authenticate, adminRoutes);
 app.use('/api/messages', authenticate, messageRoutes);
 app.use('/api/channels', authenticate, channelRoutes);
+app.use('/api/templates', authenticate, templateRoutes);
+app.use('/api/apikeys', authenticate, apiKeyRoutes);
+app.use('/api/subaccounts', authenticate, subaccountRoutes);
+app.use('/api/reports', authenticate, reportRoutes);
+app.use('/api/scheduled', authenticate, scheduledRoutes);
+app.use('/api/blacklist', authenticate, blacklistRoutes);
+app.use('/webhooks', webhookRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
@@ -107,7 +125,23 @@ async function startServer() {
     // 初始化默认管理员
     await initAdmin();
     
-    app.listen(PORT, () => {
+    const server = http.createServer(app);
+    
+    // Initialize WebSocket
+    const io = new Server(server, {
+      cors: {
+        origin: ['https://sakaloan5-create.github.io', 'http://localhost:3000', 'http://localhost:3001'],
+        credentials: true
+      }
+    });
+    initWebSocket(io);
+    logger.info('WebSocket initialized');
+    
+    // Start scheduled message processor
+    startScheduler();
+    logger.info('Scheduled message processor started');
+    
+    server.listen(PORT, () => {
       logger.info(`Server running on port ${PORT}`);
     });
   } catch (error) {
