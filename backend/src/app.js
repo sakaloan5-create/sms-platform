@@ -34,6 +34,7 @@ const reportRoutes = require('./routes/report.routes');
 const scheduledRoutes = require('./routes/scheduled.routes');
 const blacklistRoutes = require('./routes/blacklist.routes');
 const webhookRoutes = require('./routes/webhook.routes');
+const rcsRoutes = require('./routes/rcs.routes');
 
 const { errorHandler } = require('./middleware/error.middleware');
 const { authenticate } = require('./middleware/auth.middleware');
@@ -150,6 +151,7 @@ app.use('/api/subaccounts', authenticate, subaccountRoutes);
 app.use('/api/reports', authenticate, reportRoutes);
 app.use('/api/scheduled', authenticate, scheduledRoutes);
 app.use('/api/blacklist', authenticate, blacklistRoutes);
+app.use('/api/rcs', authenticate, rcsRoutes);
 
 // 管理员路由
 app.use('/api/admin', authenticate, adminRoutes);
