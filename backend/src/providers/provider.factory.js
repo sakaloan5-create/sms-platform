@@ -6,6 +6,8 @@ const TwilioProvider = require('./twilio.provider');
 const VonageProvider = require('./vonage.provider');
 const ZenviaProvider = require('./zenvia.provider');
 const MockProvider = require('./mock.provider');
+const GoogleRCSProvider = require('./google-rcs.provider');
+const SamsungRCSProvider = require('./samsung-rcs.provider');
 const logger = require('../utils/logger');
 
 class ProviderFactory {
@@ -34,6 +36,12 @@ class ProviderFactory {
         break;
       case 'mock':
         provider = new MockProvider(config);
+        break;
+      case 'google_rcs':
+        provider = new GoogleRCSProvider(config);
+        break;
+      case 'samsung_rcs':
+        provider = new SamsungRCSProvider(config);
         break;
       default:
         throw new Error(`Unknown provider: ${name}`);
@@ -137,6 +145,40 @@ class ProviderFactory {
     // 从 E.164 格式提取国家码
     const match = phoneNumber.match(/^\+(\d{1,3})/);
     return match ? match[1] : null;
+  }
+
+  /**
+   * 获取所有 RCS Providers
+   */
+  getRCSProviders() {
+    return Array.from(this.providers.values()).filter(p => p.type === 'rcs');
+  }
+
+  /**
+   * 选择 RCS Provider
+   * @param {string} phoneNumber - 目标号码
+   * @returns {object|null}
+   */
+  selectRCSProvider(phoneNumber) {
+    const rcsProviders = this.getRCSProviders();
+    if (rcsProviders.length === 0) return null;
+
+    const countryCode = this._extractCountryCode(phoneNumber);
+    
+    // 美国/加拿大优先 Google RCS
+    if (['1', '1'].includes(countryCode)) {
+      const google = rcsProviders.find(p => p.name === 'Google RCS');
+      if (google) return google;
+    }
+
+    // 韩国/亚洲优先 Samsung RCS
+    if (['82', '81', '86', '65'].includes(countryCode)) {
+      const samsung = rcsProviders.find(p => p.name === 'Samsung RCS');
+      if (samsung) return samsung;
+    }
+
+    // 默认返回第一个
+    return rcsProviders[0];
   }
 }
 
