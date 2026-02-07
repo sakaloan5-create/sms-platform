@@ -6,12 +6,7 @@
   <title>管理后台登录 - SMS Platform</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -19,8 +14,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 20px;
     }
-
     .login-container {
       background: white;
       padding: 48px;
@@ -29,36 +24,11 @@
       width: 100%;
       max-width: 420px;
     }
-
-    .login-header {
-      text-align: center;
-      margin-bottom: 32px;
-    }
-
-    .login-header h1 {
-      font-size: 24px;
-      font-weight: 700;
-      color: #1a1a2e;
-      margin-bottom: 8px;
-    }
-
-    .login-header p {
-      color: #666;
-      font-size: 14px;
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 500;
-      font-size: 14px;
-      color: #374151;
-    }
-
+    .login-header { text-align: center; margin-bottom: 32px; }
+    .login-header h1 { font-size: 24px; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; }
+    .login-header p { color: #666; font-size: 14px; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; margin-bottom: 8px; font-weight: 500; font-size: 14px; color: #374151; }
     .form-group input {
       width: 100%;
       padding: 12px 16px;
@@ -67,17 +37,8 @@
       font-size: 15px;
       transition: all 0.2s;
     }
-
-    .form-group input:focus {
-      outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
-
-    .form-group input.error {
-      border-color: #ef4444;
-    }
-
+    .form-group input:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
+    .form-group input.error { border-color: #ef4444; }
     .login-btn {
       width: 100%;
       padding: 14px;
@@ -90,18 +51,8 @@
       cursor: pointer;
       transition: all 0.2s;
     }
-
-    .login-btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-    }
-
-    .login-btn:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-      transform: none;
-    }
-
+    .login-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); }
+    .login-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
     .error-message {
       background: #fef2f2;
       color: #dc2626;
@@ -111,26 +62,10 @@
       margin-bottom: 20px;
       display: none;
     }
-
-    .error-message.show {
-      display: block;
-    }
-
-    .back-link {
-      text-align: center;
-      margin-top: 24px;
-    }
-
-    .back-link a {
-      color: #667eea;
-      text-decoration: none;
-      font-size: 14px;
-    }
-
-    .back-link a:hover {
-      text-decoration: underline;
-    }
-
+    .error-message.show { display: block; }
+    .back-link { text-align: center; margin-top: 24px; }
+    .back-link a { color: #667eea; text-decoration: none; font-size: 14px; }
+    .back-link a:hover { text-decoration: underline; }
     .loading {
       display: inline-block;
       width: 16px;
@@ -142,16 +77,8 @@
       margin-right: 8px;
       vertical-align: middle;
     }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .logo {
-      text-align: center;
-      margin-bottom: 24px;
-    }
-
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .logo { text-align: center; margin-bottom: 24px; }
     .logo-icon {
       width: 64px;
       height: 64px;
@@ -164,13 +91,22 @@
       font-size: 28px;
       font-weight: 700;
     }
+    .api-status {
+      text-align: center;
+      font-size: 12px;
+      color: #666;
+      margin-top: 16px;
+      padding: 8px;
+      background: #f3f4f6;
+      border-radius: 6px;
+    }
+    .api-status.online { color: #16a34a; }
+    .api-status.offline { color: #dc2626; }
   </style>
 </head>
 <body>
   <div class="login-container">
-    <div class="logo">
-      <div class="logo-icon">SMS</div>
-    </div>
+    <div class="logo"><div class="logo-icon">SMS</div></div>
 
     <div class="login-header">
       <h1>管理后台</h1>
@@ -182,32 +118,18 @@
     <form id="loginForm">
       <div class="form-group">
         <label for="email">邮箱</label>
-        <input 
-          type="email" 
-          id="email" 
-          name="email" 
-          placeholder="admin@example.com"
-          required
-          autocomplete="email"
-        >
+        <input type="email" id="email" name="email" placeholder="admin@smsplatform.com" required autocomplete="email">
       </div>
 
       <div class="form-group">
         <label for="password">密码</label>
-        <input 
-          type="password" 
-          id="password" 
-          name="password" 
-          placeholder="请输入密码"
-          required
-          autocomplete="current-password"
-        >
+        <input type="password" id="password" name="password" placeholder="请输入密码" required autocomplete="current-password">
       </div>
 
-      <button type="submit" class="login-btn" id="loginBtn">
-        登录
-      </button>
+      <button type="submit" class="login-btn" id="loginBtn">登录</button>
     </form>
+
+    <div class="api-status" id="apiStatus">检测 API 连接中...</div>
 
     <div class="back-link">
       <a href="../merchant-dashboard/">← 返回商户后台</a>
@@ -215,10 +137,34 @@
   </div>
 
   <script>
-    // API 配置
+    // 自动检测 API 地址
     const API_BASE_URL = window.location.hostname === 'localhost' 
       ? 'http://localhost:3000/api'
       : 'https://sms-platform-api.onrender.com/api';
+
+    // 检查 API 状态
+    async function checkApiStatus() {
+      const statusEl = document.getElementById('apiStatus');
+      try {
+        const response = await fetch(`${API_BASE_URL}/health`, { 
+          method: 'GET',
+          mode: 'cors'
+        });
+        if (response.ok) {
+          statusEl.textContent = `✓ API 在线 (${API_BASE_URL})`;
+          statusEl.className = 'api-status online';
+        } else {
+          throw new Error('API 响应异常');
+        }
+      } catch (error) {
+        statusEl.textContent = `✗ API 离线 - 请检查后端服务 (${API_BASE_URL})`;
+        statusEl.className = 'api-status offline';
+        console.error('API 检查失败:', error);
+      }
+    }
+
+    // 页面加载时检查 API
+    checkApiStatus();
 
     // 检查是否已登录
     const token = localStorage.getItem('admin_token');
@@ -239,22 +185,18 @@
       errorMessage.classList.remove('show');
       document.querySelectorAll('input').forEach(input => input.classList.remove('error'));
 
-      // 简单验证
       if (!email || !password) {
         showError('请填写邮箱和密码');
         return;
       }
 
-      // 显示加载状态
       loginBtn.disabled = true;
       loginBtn.innerHTML = '<span class="loading"></span>登录中...';
 
       try {
         const response = await fetch(`${API_BASE_URL}/auth/admin/login`, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password })
         });
 
@@ -264,11 +206,8 @@
           throw new Error(data.error || '登录失败');
         }
 
-        // 保存登录信息
         localStorage.setItem('admin_token', data.token);
         localStorage.setItem('admin_user', JSON.stringify(data.user));
-
-        // 跳转到管理后台
         window.location.href = 'index.html';
 
       } catch (error) {
@@ -282,33 +221,16 @@
       const errorMessage = document.getElementById('errorMessage');
       errorMessage.textContent = message;
       errorMessage.classList.add('show');
-      
-      // 高亮输入框
       document.querySelectorAll('input').forEach(input => {
-        if (!input.value) {
-          input.classList.add('error');
-        }
+        if (!input.value) input.classList.add('error');
       });
-
-      // 3秒后自动隐藏错误
-      setTimeout(() => {
-        errorMessage.classList.remove('show');
-      }, 5000);
     }
 
-    // 输入时移除错误状态
     document.querySelectorAll('input').forEach(input => {
       input.addEventListener('input', () => {
         input.classList.remove('error');
         document.getElementById('errorMessage').classList.remove('show');
       });
-    });
-
-    // 回车键登录
-    document.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        document.getElementById('loginForm').dispatchEvent(new Event('submit'));
-      }
     });
   </script>
 </body>
