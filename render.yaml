@@ -1,23 +1,46 @@
+# Render 部署配置文件
+# https://render.com/docs/yaml-spec
+
 services:
+  # Web 服务 (API)
   - type: web
     name: sms-platform-api
-    runtime: docker
-    plan: free
-    dockerfilePath: ./Dockerfile
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
-        value: 8080
+        value: 10000
       - key: JWT_SECRET
         generateValue: true
-      - key: JWT_EXPIRES_IN
-        value: 24h
-      - key: FRONTEND_URL
-        value: https://sakaloan5-create.github.io/sms-platform
       - key: DATABASE_URL
-        value: sqlite:/data/database.sqlite
-    disk:
-      name: sms-data
-      mountPath: /data
-      sizeGB: 1
+        fromDatabase:
+          name: sms-platform-db
+          property: connectionString
+      - key: API_BASE_URL
+        value: https://sms-platform-api.onrender.com
+
+  # 可选: 静态站点 (前端)
+  - type: static
+    name: sms-platform-dashboard
+    rootDir: .
+    buildCommand: echo "No build needed"
+    staticPublishPath: admin-dashboard
+    routes:
+      - type: rewrite
+        source: /merchant/*
+        destination: /merchant-dashboard/index.html
+      - type: rewrite
+        source: /admin/*
+        destination: /admin-dashboard/login.html
+
+databases:
+  - name: sms-platform-db
+    databaseName: sms_platform
+    user: sms_admin
+    plan: free
+    ipAllowList: []
